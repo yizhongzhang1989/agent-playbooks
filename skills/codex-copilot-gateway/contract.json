@@ -1,0 +1,441 @@
+{
+  "schema_version": 1,
+  "id": "codex-copilot-gateway",
+  "lifecycle": "active",
+  "tags": [
+    "ai-tools",
+    "codex",
+    "copilot",
+    "configuration",
+    "diagnostics"
+  ],
+  "aliases": [
+    "Codex",
+    "Copilot",
+    "copilot-gateway",
+    "Codex反向代理",
+    "VS Code Codex",
+    "copilot-api",
+    "CODEX_PROXY_OK",
+    "stream closed before response.completed",
+    "Open Codex Sidebar",
+    "只看到 Chat",
+    "Copilot 网关",
+    "插件找不到模型",
+    "流提前结束",
+    "UND_ERR_CONNECT_TIMEOUT",
+    "ENOTFOUND",
+    "EAI_AGAIN",
+    "misalignment_policy_violation",
+    "网关鉴权失败",
+    "授权文件为空"
+  ],
+  "use_when": [
+    "需要让普通本地 Codex CLI 或 VS Code Codex 使用有权访问的 Copilot 模型",
+    "诊断本地 copilot-gateway 的鉴权、模型、SSE 或插件接入",
+    "验证或回滚本次明确授权的 Codex 网关配置"
+  ],
+  "avoid_when": [
+    "只需要系统 HTTP_PROXY、Nginx 或通用网络代理",
+    "需要绕过账号权限、额度、地区或组织限制",
+    "尚未确定扩展在本地、远程主机还是容器内运行"
+  ],
+  "input_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "operation"
+    ],
+    "properties": {
+      "operation": {
+        "enum": [
+          "install",
+          "diagnose",
+          "verify",
+          "rollback"
+        ]
+      },
+      "model": {
+        "type": "string",
+        "minLength": 1
+      },
+      "reasoning_effort": {
+        "type": "string",
+        "minLength": 1
+      },
+      "live_probe": {
+        "type": "boolean",
+        "default": false
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "operation",
+      "status",
+      "checks",
+      "remaining"
+    ],
+    "properties": {
+      "operation": {
+        "enum": [
+          "install",
+          "diagnose",
+          "verify",
+          "rollback"
+        ]
+      },
+      "status": {
+        "enum": [
+          "succeeded",
+          "failed",
+          "blocked",
+          "waiting_for_user"
+        ]
+      },
+      "checks": {
+        "type": "object",
+        "minProperties": 1,
+        "additionalProperties": {
+          "enum": [
+            "passed",
+            "failed",
+            "not_tested"
+          ]
+        }
+      },
+      "remaining": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "status": {
+              "const": "succeeded"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "checks": {
+              "type": "object",
+              "additionalProperties": {
+                "const": "passed"
+              }
+            },
+            "remaining": {
+              "type": "array",
+              "maxItems": 0
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "status": {
+              "const": "succeeded"
+            },
+            "operation": {
+              "enum": [
+                "install",
+                "verify"
+              ]
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "checks": {
+              "type": "object",
+              "properties": {
+                "A_PATCH": {},
+                "A_SERVICE": {},
+                "A_AUTH": {},
+                "A_MODELS": {},
+                "A_SSE": {},
+                "A_CLI": {},
+                "A_EXTENSION_CLI": {},
+                "A_UI": {}
+              },
+              "required": [
+                "A_PATCH",
+                "A_SERVICE",
+                "A_AUTH",
+                "A_MODELS",
+                "A_SSE",
+                "A_CLI",
+                "A_EXTENSION_CLI",
+                "A_UI"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "status": {
+              "const": "succeeded"
+            },
+            "operation": {
+              "const": "diagnose"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "checks": {
+              "type": "object",
+              "properties": {
+                "A_DIAGNOSIS": {}
+              },
+              "required": [
+                "A_DIAGNOSIS"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "status": {
+              "const": "succeeded"
+            },
+            "operation": {
+              "const": "rollback"
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "checks": {
+              "type": "object",
+              "properties": {
+                "A_ROLLBACK": {}
+              },
+              "required": [
+                "A_ROLLBACK"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "operations": [
+    {
+      "id": "install",
+      "entrypoint": "references/install.md",
+      "preconditions": [
+        "已确定目标用户和本地扩展运行端",
+        "无冲突网关安装；已有客户端配置须先备份"
+      ],
+      "effects": [
+        "dependency_download",
+        "private_file_write",
+        "account_authorization",
+        "user_service_change",
+        "extension_change"
+      ],
+      "confirmation": [
+        "切换已有默认登录或扩展版本",
+        "GitHub设备授权",
+        "管理员许可和服务影响",
+        "真实模型探测"
+      ],
+      "required_acceptance": [
+        "A_PATCH",
+        "A_SERVICE",
+        "A_AUTH",
+        "A_MODELS",
+        "A_SSE",
+        "A_CLI",
+        "A_EXTENSION_CLI",
+        "A_UI"
+      ]
+    },
+    {
+      "id": "diagnose",
+      "entrypoint": "references/diagnose.md",
+      "preconditions": [
+        "获得具体症状和目标环境",
+        "优先只读检查现有部署"
+      ],
+      "effects": [
+        "local_read",
+        "optional_gateway_metadata_request"
+      ],
+      "confirmation": [
+        "扩大到写操作、重启、重新授权或付费请求"
+      ],
+      "required_acceptance": [
+        "A_DIAGNOSIS"
+      ]
+    },
+    {
+      "id": "verify",
+      "entrypoint": "references/verify.md",
+      "preconditions": [
+        "目标部署已存在",
+        "模型和推理强度以实际账号能力为准"
+      ],
+      "effects": [
+        "local_read",
+        "gateway_metadata_request",
+        "optional_paid_request",
+        "temporary_probe_files"
+      ],
+      "confirmation": [
+        "真实模型请求及其配额影响",
+        "用户参与GUI验收",
+        "另行批准的服务重启或系统重启"
+      ],
+      "required_acceptance": [
+        "A_PATCH",
+        "A_SERVICE",
+        "A_AUTH",
+        "A_MODELS",
+        "A_SSE",
+        "A_CLI",
+        "A_EXTENSION_CLI",
+        "A_UI"
+      ]
+    },
+    {
+      "id": "rollback",
+      "entrypoint": "references/rollback.md",
+      "preconditions": [
+        "确认原始状态、备份和本次实际改动",
+        "确认没有需要保留的后续配置"
+      ],
+      "effects": [
+        "private_file_restore",
+        "user_service_change",
+        "optional_extension_change"
+      ],
+      "confirmation": [
+        "服务中断和恢复范围",
+        "涉及其他服务的lingering变更"
+      ],
+      "required_acceptance": [
+        "A_ROLLBACK"
+      ]
+    }
+  ],
+  "dependencies": {
+    "capabilities": [
+      "local_file_read",
+      "local_shell",
+      "user_authorization",
+      "user_gui_confirmation"
+    ],
+    "platform": "Validated: Ubuntu 22.04.5 LTS, Linux x86_64, local VS Code; adapt before other platforms.",
+    "commands": [
+      "bash",
+      "curl",
+      "tar",
+      "xz",
+      "sha256sum",
+      "realpath",
+      "awk",
+      "mktemp",
+      "timeout",
+      "ss",
+      "systemctl",
+      "loginctl",
+      "code"
+    ]
+  },
+  "acceptance": {
+    "A_PATCH": {
+      "description": "固定依赖安装后补丁成功，4项原始基础自检全部通过",
+      "method": "offline"
+    },
+    "A_SERVICE": {
+      "description": "用户服务active/enabled、Linger=yes且只监听127.0.0.1:4141；不等同于重启整机实测",
+      "method": "local"
+    },
+    "A_AUTH": {
+      "description": "本地普通密钥匹配、私有权限正确、无密钥401且带密钥200",
+      "method": "local"
+    },
+    "A_MODELS": {
+      "description": "两种目录结构正确，所选模型及正常/探测推理强度可用",
+      "method": "local"
+    },
+    "A_SSE": {
+      "description": "HTTP 200、SSE、真实response.completed和精确CODEX_PROXY_OK，无失败事件",
+      "method": "live"
+    },
+    "A_CLI": {
+      "description": "独立CLI从空目录用默认认证成功退出0并返回精确标记",
+      "method": "live"
+    },
+    "A_EXTENSION_CLI": {
+      "description": "实际目标扩展内置CLI同样完成空目录探测",
+      "method": "live"
+    },
+    "A_UI": {
+      "description": "实际目标版本的普通VS Code新会话完整成功，由用户或可靠GUI证据确认",
+      "method": "user"
+    },
+    "A_DIAGNOSIS": {
+      "description": "以观察结果定位失败层，区分已知原因与未证实假设，并给出下一步",
+      "method": "manual"
+    },
+    "A_ROLLBACK": {
+      "description": "仅恢复本次授权的改动，核对原配置及无关数据保留；原先无登录则明确报告",
+      "method": "manual"
+    }
+  },
+  "limits": {
+    "request_timeout_seconds": 120,
+    "cli_timeout_seconds": 180,
+    "automatic_retries": 0,
+    "stop_when": [
+      "补丁失败",
+      "目标路径存在但归属不明",
+      "账号无权限或策略拒绝",
+      "缺少必要授权或验收能力",
+      "出现未覆盖的环境差异"
+    ]
+  },
+  "resources": [
+    "versions.json",
+    "sources.json",
+    "THIRD_PARTY_NOTICES.md",
+    "references/install.md",
+    "references/diagnose.md",
+    "references/verify.md",
+    "references/rollback.md",
+    "references/optional.md",
+    "scripts/create-gateway-config.mjs",
+    "scripts/verify.mjs",
+    "scripts/common.mjs",
+    "assets/templates/copilot-gateway.sh",
+    "assets/templates/copilot-gateway.service",
+    "assets/templates/codex.config.toml",
+    "assets/templates/gateway.config.example.json",
+    "assets/licenses/copilot-api-MIT.txt",
+    "tools/package.json",
+    "tools/package-lock.json",
+    "tools/patches/@jeffreycao+copilot-api+2.8.2.patch",
+    "tools/test/replication.test.mjs",
+    "findings.json"
+  ],
+  "evidence": {
+    "current": [
+      "evidence/2026-11-25-ubuntu-22.04-x86_64.json"
+    ],
+    "historical": []
+  }
+}

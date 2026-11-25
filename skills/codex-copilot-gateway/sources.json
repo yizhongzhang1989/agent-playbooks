@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "source-guide",
+      "kind": "provided_document",
+      "title": "CODEX_REVERSE_PROXY_SETUP.md, audited installation guide",
+      "sha256": "849ab86a8c931596a8d74a8e816fdf8d61a794bc4e89db57af7f33cc7c1236b1",
+      "observed_on": "2026-11-25",
+      "claims": ["Reference configuration", "Empty authorization-file incident", "Extension entry and version-pin incidents", "Four supplied tests", "Prior live and user-confirmed UI results"],
+      "note": "Provenance of the user-supplied source, not a required external file. Its procedures are migrated into this skill; no private paths, raw conversations or second editable copy are bundled."
+    },
+    {
+      "id": "gateway-upstream",
+      "kind": "source_code",
+      "uri": "https://github.com/caozhiyuan/copilot-api",
+      "version": "@jeffreycao/copilot-api@2.8.2",
+      "claims": ["Gateway provider behavior", "HTTP/SSE transport", "Original runtime error forwarding"],
+      "note": "Patch applies to the pinned npm build, not arbitrary future repository HEAD."
+    },
+    {
+      "id": "node-checksums",
+      "kind": "official_artifact",
+      "uri": "https://nodejs.org/dist/v24.22.2/SHASUMS256.txt",
+      "version": "24.22.2",
+      "claims": ["Dedicated Node archive integrity"]
+    },
+    {
+      "id": "vscode-extensions",
+      "kind": "official_documentation",
+      "uri": "https://code.visualstudio.com/docs/configure/extensions/extension-marketplace",
+      "observed_on": "2026-11-25",
+      "claims": ["Install a particular extension version", "Individual extension auto-update controls"],
+      "note": "The publisher-menu disabled state was also checked against the installed 1.147.0 implementation; UI behavior may change."
+    },
+    {
+      "id": "vscode-linux",
+      "kind": "official_documentation",
+      "uri": "https://code.visualstudio.com/docs/setup/linux",
+      "claims": ["Editor installation prerequisite"]
+    }
+  ]
+}

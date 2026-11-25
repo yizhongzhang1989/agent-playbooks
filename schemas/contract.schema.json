@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "lifecycle",
+    "tags",
+    "aliases",
+    "use_when",
+    "avoid_when",
+    "input_schema",
+    "output_schema",
+    "operations",
+    "dependencies",
+    "acceptance",
+    "limits",
+    "resources",
+    "evidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "$ref": "#/$defs/id"
+    },
+    "lifecycle": {
+      "enum": [
+        "draft",
+        "active",
+        "stale",
+        "deprecated"
+      ]
+    },
+    "tags": {
+      "$ref": "#/$defs/strings"
+    },
+    "aliases": {
+      "$ref": "#/$defs/strings"
+    },
+    "use_when": {
+      "$ref": "#/$defs/strings"
+    },
+    "avoid_when": {
+      "$ref": "#/$defs/strings"
+    },
+    "input_schema": {
+      "type": "object"
+    },
+    "output_schema": {
+      "type": "object"
+    },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "entrypoint",
+          "preconditions",
+          "effects",
+          "confirmation",
+          "required_acceptance"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "entrypoint": {
+            "type": "string",
+            "minLength": 1
+          },
+          "preconditions": {
+            "$ref": "#/$defs/strings"
+          },
+          "effects": {
+            "$ref": "#/$defs/strings"
+          },
+          "confirmation": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required_acceptance": {
+            "$ref": "#/$defs/strings"
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capabilities",
+        "platform",
+        "commands"
+      ],
+      "properties": {
+        "capabilities": {
+          "$ref": "#/$defs/strings"
+        },
+        "platform": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commands": {
+          "$ref": "#/$defs/strings"
+        }
+      }
+    },
+    "acceptance": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^A_[A-Z0-9_]+$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "description",
+          "method"
+        ],
+        "properties": {
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "method": {
+            "enum": [
+              "offline",
+              "local",
+              "live",
+              "user",
+              "manual"
+            ]
+          }
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "automatic_retries",
+        "stop_when"
+      ],
+      "properties": {
+        "request_timeout_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 600
+        },
+        "cli_timeout_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 600
+        },
+        "automatic_retries": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "stop_when": {
+          "$ref": "#/$defs/strings"
+        }
+      }
+    },
+    "resources": {
+      "$ref": "#/$defs/strings"
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "current",
+        "historical"
+      ],
+      "properties": {
+        "current": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^evidence/[a-zA-Z0-9._-]+\\.json$"
+          }
+        },
+        "historical": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^evidence/[a-zA-Z0-9._-]+\\.json$"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "strings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

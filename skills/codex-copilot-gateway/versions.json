@@ -1,0 +1,15 @@
+{
+  "node": "24.22.2",
+  "npm_observed": "11.19.1",
+  "vscode_observed": "1.147.0",
+  "extension_id": "openai.chatgpt",
+  "extension_version": "26.1106.51428",
+  "extension_codex_observed": "0.167.0-alpha.4.1",
+  "platform_observed": "Ubuntu 22.04.5 LTS / Linux x86_64",
+  "model_reference": "gpt-6-astra",
+  "reasoning_reference": "high",
+  "probe_reasoning_reference": "low",
+  "validated_on": "2026-11-25",
+  "npm_dependency_source": "tools/package.json",
+  "note": "Model and reasoning are account-dependent selections, not universal entitlements. Observed versions are not claims about all compatible versions."
+}

@@ -1,0 +1,24 @@
+{
+  "auth": {
+    "apiKeys": [],
+    "adminApiKey": ""
+  },
+  "modelMappings": {
+    "codex-auto-review": "codex/codex-auto-review",
+    "gpt-reserve": "codex/gpt-reserve"
+  },
+  "useResponsesApiWebSocket": false,
+  "contextManagement": { "messages": true, "responses": false },
+  "opencodeModelContextWindow": 400000,
+  "extraPrompts": {},
+  "modelResponsesApiCompactThresholds": { "gpt-5.4": 217600, "gpt-5.5": 217600 },
+  "modelReasoningEfforts": {},
+  "upstreamTransport": {
+    "headersTimeoutMs": 300000,
+    "streamInactivityTimeoutMs": 300000,
+    "websocketMaxBufferedBytes": 8388608,
+    "websocketMaxBufferedMessages": 1024,
+    "websocketOpenTimeoutMs": 30000,
+    "websocketPoolIdleTimeoutMs": 60000
+  }
+}

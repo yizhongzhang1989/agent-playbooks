@@ -1,0 +1,16 @@
+node_modules/
+runtime/
+downloads/
+.env
+.env.*
+!.env.example
+gateway/
+auth.json
+github_token
+*.sqlite
+*.sqlite-*
+*.log
+sessions/
+runs/
+backup-before-*/
+.DS_Store

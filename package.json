@@ -1,0 +1,21 @@
+{
+  "name": "agent-playbooks",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "catalog": "node tools/build-catalog.mjs",
+    "find": "node tools/find.mjs",
+    "validate": "node tools/validate.mjs",
+    "test": "node --test test/*.test.mjs",
+    "test:gateway": "node tools/test-gateway.mjs",
+    "check": "npm run validate && npm test && npm run test:gateway"
+  },
+  "devDependencies": {
+    "ajv": "8.20.0",
+    "yaml": "2.9.1"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "reference-installation-2026-11-25",
+  "date": "2026-11-25",
+  "scope": "source_installation",
+  "environment": {
+    "platform": "Ubuntu 22.04.5 LTS / Linux x86_64",
+    "node": "24.22.2",
+    "gateway": "2.8.2",
+    "standalone_codex": "0.166.0",
+    "vscode": "1.147.0",
+    "extension": "26.1106.51428",
+    "extension_codex": "0.167.0-alpha.4.1"
+  },
+  "material_hashes": {
+    "tools/package.json": "8f809a49e4a082de7abf212e800558d2aa2d04cde2838ed6909d4fc1af0e49eb",
+    "tools/package-lock.json": "de6c8b48c62d175aaf11a46dc2e2b98bc2b929f10374d9c7f57f3ffc0a2b4118",
+    "tools/patches/@jeffreycao+copilot-api+2.8.2.patch": "00419025686ffe7cc9f95c5d5564b295bd4d879b33d92ff13aab0f049ee6f2ae",
+    "tools/test/replication.test.mjs": "a75d2a242cc31034b8a762ea1f58d4826b8e3f456abe84ae2abe08249b42d83a"
+  },
+  "checks": [
+    { "id": "A_PATCH", "result": "passed", "method": "offline", "source_refs": ["source-guide"], "detail": "Four tests passed; stored patch matched the guide and passed reverse --check without reverting it." },
+    { "id": "A_SERVICE", "result": "passed", "method": "local", "source_refs": ["source-guide"], "detail": "active/enabled, Linger=yes, loopback-only listener; service restart recovered authenticated catalog access." },
+    { "id": "A_AUTH", "result": "passed", "method": "local", "source_refs": ["source-guide"], "detail": "401 without key, 200 with ordinary key, matching default client key and mode-600 private files; no credentials included." },
+    { "id": "A_MODELS", "result": "passed", "method": "local", "source_refs": ["source-guide"], "detail": "OpenAI data and Codex models catalogs available; gpt-6-astra supported low and high. Counts were snapshots, not requirements." },
+    { "id": "A_SSE", "result": "passed", "method": "live", "source_refs": ["source-guide"], "detail": "Fixed text returned HTTP 200, SSE, response.completed and exact CODEX_PROXY_OK during the source installation." },
+    { "id": "A_CLI", "result": "passed", "method": "live", "source_refs": ["source-guide"], "detail": "Dedicated CLI exited 0 with exact marker in an empty directory, high reasoning, default HOME without API-key environment overrides." },
+    { "id": "A_EXTENSION_CLI", "result": "passed", "method": "live", "source_refs": ["source-guide"], "detail": "Pinned extension's bundled CLI passed the same default-configuration probe." },
+    { "id": "A_UI", "result": "passed", "method": "user", "source_refs": ["source-guide"], "detail": "User confirmed complete marker reply after reload; installed pin and actual app-server executable were separately checked." }
+  ],
+  "limitations": [
+    "Historical source-installation evidence, not a new execution of this migrated skill on a clean machine.",
+    "No native skill registration across all AI clients was tested.",
+    "Four tests do not cover the complete transport, timeout and cancellation behavior.",
+    "Isolated CLI, remote forwarding, arm64, other OSes and long-session compaction were not tested.",
+    "Full-machine reboot, logout persistence and rollback execution were not tested."
+  ]
+}
