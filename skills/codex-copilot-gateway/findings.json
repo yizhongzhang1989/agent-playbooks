@@ -1,4 +1,67 @@
 {
   "schema_version": 1,
-  "findings": []
+  "findings": [
+    {
+      "id": "windows-maintenance-portability",
+      "kind": "problem",
+      "status": "resolved",
+      "summary": "Native Windows needs exact LF checkout bytes, real ACL checks, portable npm/Bash invocation and unprivileged resource-escape fixtures.",
+      "observed_on": "2026-11-25",
+      "applies_to": ["Native Windows x64 maintenance", "Git core.autocrlf=true", "PowerShell 7 launching Node and Windows PowerShell children"],
+      "operations": ["install", "diagnose", "verify"],
+      "blocking": false,
+      "aliases": ["UNSAFE_GATEWAY_DIRECTORY", "UNSAFE_PERMISSIONS", "current evidence material changed", "EPERM symlink"],
+      "source_refs": ["windows-maintenance-validation", "windows-acl", "node-windows-child-process"],
+      "resolution": {
+        "reason": "Use protected user/SYSTEM ACLs instead of skipping permission checks. Pin repository text to LF, preserve original evidence bytes, invoke the selected npm CLI through Node, feed Bash syntax checks via stdin, and use a directory junction for the Windows escape test.",
+        "resources": ["scripts/common.mjs", "scripts/windows-acl.ps1", "scripts/create-gateway-config.mjs", "references/windows.md"],
+        "verification": [
+          {"method": "offline", "result": "passed", "detail": "All 17 repository tests passed on Windows. The ACL regression rejected Everyone grants on both secret files and the gateway directory. All four original Linux material hashes matched after LF normalization; no historical hashes were replaced."}
+        ]
+      }
+    },
+    {
+      "id": "windows-existing-proxy-catalog",
+      "kind": "discovery",
+      "status": "resolved",
+      "summary": "An existing Windows Codex route can use a different loopback port, command-based authentication and a stale static model catalog; Linux installation assumptions misdiagnose it.",
+      "observed_on": "2026-11-25",
+      "applies_to": ["Existing native Windows copilot-proxy-api 0.10.32 deployment", "Codex model_catalog_json and provider authentication commands"],
+      "operations": ["diagnose", "verify", "rollback"],
+      "blocking": false,
+      "aliases": ["Windows Codex", "model_catalog_json", "Codex 模型不全", "Codex 连接不上"],
+      "source_refs": ["windows-native-observation", "windows-run-startup"],
+      "resolution": {
+        "reason": "Backed up the specific targets, started the inspected existing launcher and refreshed only its account-derived catalog. Preserved provider, model, reasoning, keys, compatibility exclusions and startup registration. No migration or reinstall was necessary for metadata recovery.",
+        "resources": ["references/windows.md", "references/diagnose.md", "references/verify.md", "references/rollback.md"],
+        "verification": [
+          {"method": "local", "result": "passed", "detail": "Loopback-only listener, health 200, no-key 401, keyed models 200, and all 13 refreshed entries returned by the actual bundled app-server model/list. Zero inference requests. This resolves the observed listener/catalog conditions, not the unexplained earlier process exit or live/UI/persistence acceptance."}
+        ]
+      }
+    },
+    {
+      "id": "windows-pinned-install-pending",
+      "kind": "problem",
+      "status": "open",
+      "summary": "The pinned gateway's Windows clean installation and four original tests remain unverified after a locked dependency download failed.",
+      "observed_on": "2026-11-25",
+      "applies_to": ["Windows target using a package mirror that returned 404 for pkce-challenge 5.0.2", "The same target could not negotiate TLS with the official registry"],
+      "operations": ["install", "verify"],
+      "blocking": false,
+      "aliases": ["pkce-challenge@5.0.2", "Windows gateway clean install"],
+      "source_refs": ["windows-maintenance-validation"]
+    },
+    {
+      "id": "windows-live-ui-pending",
+      "kind": "discovery",
+      "status": "open",
+      "summary": "Native Windows metadata recovery is not proof of real SSE completion, CLI turns, the visible Codex UI, or logout/reboot persistence.",
+      "observed_on": "2026-11-25",
+      "applies_to": ["Native Windows target with quota permission unavailable and GUI control disabled"],
+      "operations": ["install", "verify"],
+      "blocking": false,
+      "aliases": ["Windows Codex GUI verification", "Windows Codex live probe"],
+      "source_refs": ["windows-native-observation", "windows-run-startup"]
+    }
+  ]
 }

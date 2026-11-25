@@ -1,6 +1,10 @@
-import { lstat, readFile } from "node:fs/promises";
-import { isAbsolute, resolve } from "node:path";
+import { execFile } from "node:child_process";
+import { lstat, mkdir, readFile } from "node:fs/promises";
+import { isAbsolute, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
+
+const execute = promisify(execFile);
 
 export class ProbeError extends Error {
   constructor(code, message) {
@@ -28,10 +32,37 @@ export async function readPrivateJson(path, label) {
   }
 }
 
+async function windowsAcl(path, action = "Check") {
+  check(typeof process.env.SystemRoot === "string" && isAbsolute(process.env.SystemRoot),
+    "WINDOWS_POWERSHELL_UNAVAILABLE", "Windows SystemRoot is required for ACL verification.");
+  const executable = join(process.env.SystemRoot, "System32", "WindowsPowerShell", "v1.0", "powershell.exe");
+  const script = fileURLToPath(new URL("./windows-acl.ps1", import.meta.url));
+  const { stdout } = await execute(executable, ["-NoProfile", "-NonInteractive", "-File", script, "-Action", action, "-Path", absolutePath(path)], {
+    timeout: 15000, maxBuffer: 65536, windowsHide: true,
+  });
+  check(stdout.trim() === "private", "UNSAFE_PERMISSIONS",
+    "Windows private paths must be owned by the current user or SYSTEM and allow access only to those identities.");
+}
+
+export async function createPrivateDirectory(path) {
+  const target = absolutePath(path);
+  if (process.platform === "win32") await windowsAcl(target, "CreateDirectory");
+  else await mkdir(target, { mode: 0o700 });
+}
+
+export async function privateDirectory(path) {
+  const info = await lstat(path);
+  check(info.isDirectory() && !info.isSymbolicLink(), "UNSAFE_GATEWAY_DIRECTORY", "Expected a private directory, not a symlink.");
+  if (process.platform === "win32") await windowsAcl(path);
+  else check((info.mode & 0o777) === 0o700, "UNSAFE_GATEWAY_DIRECTORY", "Private directories must have mode 700.");
+  return info;
+}
+
 export async function privateFile(path) {
   const info = await lstat(path);
   check(info.isFile() && !info.isSymbolicLink(), "INVALID_PRIVATE_FILE", "Expected a regular private file, not a symlink.");
-  check((info.mode & 0o777) === 0o600, "UNSAFE_PERMISSIONS", "Private files must have mode 600.");
+  if (process.platform === "win32") await windowsAcl(path);
+  else check((info.mode & 0o777) === 0o600, "UNSAFE_PERMISSIONS", "Private files must have mode 600.");
   return info;
 }
 

@@ -13,6 +13,9 @@ Do not automatically downgrade VS Code itself or modify other extensions.
 
 Validated platform: Ubuntu 22.04.5 LTS / x86_64. Other platforms and isolated
 clients are described, but not certified, in [optional.md](optional.md).
+Native Windows adaptations and their unverified installation scope are in
+[windows.md](windows.md#reference-package-on-windows). Do not apply the Bash,
+systemd, chmod or Linux archive steps to native Windows.
 VS Code must already be installed with a working `code` command;
 see the official Linux installation source if it is missing.
 

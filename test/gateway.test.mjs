@@ -1,13 +1,14 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { createServer } from "node:http";
-import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { promisify } from "node:util";
 import test from "node:test";
 import { ROOT } from "../tools/lib.mjs";
 import { createGatewayConfig } from "../skills/codex-copilot-gateway/scripts/create-gateway-config.mjs";
+import { createPrivateDirectory, privateFile } from "../skills/codex-copilot-gateway/scripts/common.mjs";
 import { completedMarker, localOrigin, verify } from "../skills/codex-copilot-gateway/scripts/verify.mjs";
 
 const execute = promisify(execFile);
@@ -15,8 +16,8 @@ const execute = promisify(execFile);
 async function fixture(t) {
   const root = await mkdtemp(join(tmpdir(), "playbook-config-test-"));
   t.after(() => rm(root, { recursive: true, force: true }));
-  await mkdir(join(root, "gateway"), { mode: 0o700 });
-  await mkdir(join(root, "client"), { mode: 0o700 });
+  await createPrivateDirectory(join(root, "gateway"));
+  await createPrivateDirectory(join(root, "client"));
   await createGatewayConfig(root);
   const config = JSON.parse(await readFile(join(root, "gateway/config.json"), "utf8"));
   await writeFile(join(root, "gateway/github_token"), "synthetic-authorization", { mode: 0o600 });
@@ -27,11 +28,22 @@ async function fixture(t) {
 
 test("configuration generation is private, non-overwriting and forbidden inside the source repository", async t => {
   const { root, config } = await fixture(t);
-  assert.equal((await stat(join(root, "gateway/config.json"))).mode & 0o777, 0o600);
+  await privateFile(join(root, "gateway/config.json"));
+  if (process.platform !== "win32") assert.equal((await stat(join(root, "gateway/config.json"))).mode & 0o777, 0o600);
   assert.ok(config.auth.apiKeys[0] !== config.auth.adminApiKey);
   await assert.rejects(createGatewayConfig(root), { code: "EEXIST" });
   await assert.rejects(createGatewayConfig(ROOT), { code: "RUNTIME_IN_REPOSITORY" });
   assert.deepEqual(JSON.parse(await readFile(join(root, "gateway/config.json"), "utf8")), config);
+});
+
+test("Windows ACL checks reject unrelated principals without changing existing permissions", { skip: process.platform !== "win32" }, async t => {
+  const context = await fixture(t);
+  const keyFile = join(context.root, "gateway/config.json");
+  await execute("icacls.exe", [keyFile, "/grant", "*S-1-1-0:(R)"]);
+  await assert.rejects(verify(context), { code: "UNSAFE_PERMISSIONS" });
+  await assert.rejects(privateFile(keyFile), { code: "UNSAFE_PERMISSIONS" });
+  await execute("icacls.exe", [join(context.root, "gateway"), "/grant", "*S-1-1-0:(OI)(CI)(R)"]);
+  await assert.rejects(createGatewayConfig(context.root), { code: "UNSAFE_PERMISSIONS" });
 });
 
 test("offline verification rejects pending authorization and mismatched client keys without leaking values", async t => {

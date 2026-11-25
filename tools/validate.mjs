@@ -52,7 +52,7 @@ for (const file of await listFiles(ROOT)) {
     requireCondition(result.status === 0, `JavaScript syntax failure: ${name}\n${result.stderr}`);
   }
   if (file.endsWith(".sh")) {
-    const result = spawnSync("bash", ["-n", file], { encoding: "utf8" });
+    const result = spawnSync("bash", ["-n"], { input: text, encoding: "utf8" });
     requireCondition(result.status === 0, `Shell syntax failure: ${name}\n${result.stderr}`);
   }
   if (file.endsWith(".md")) {

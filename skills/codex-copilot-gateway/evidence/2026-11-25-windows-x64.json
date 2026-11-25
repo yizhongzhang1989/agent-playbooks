@@ -1,0 +1,101 @@
+{
+  "id": "windows-maintenance-and-existing-proxy-2026-11-25",
+  "date": "2026-11-25",
+  "scope": "target_installation",
+  "environment": {
+    "platform": "Native Windows / x64",
+    "node": "26.13.0",
+    "shell": "PowerShell 7.6.10; ACL helper also executed through Windows PowerShell",
+    "existing_proxy": "copilot-proxy-api 0.10.32; not the reference gateway",
+    "reference_gateway": "@jeffreycao/copilot-api 2.8.2; locked installation blocked before tests",
+    "vscode": "1.147.0",
+    "extension": "26.1007.21434",
+    "extension_codex": "0.162.0-alpha.17.2"
+  },
+  "material_hashes": {
+    "scripts/common.mjs": "e2a29e8626ad24f5b9cf0cf8af93a6f57859f4769656e90cb28b734b5aaf6904",
+    "scripts/create-gateway-config.mjs": "27c01df8f1e1bf1629aa2f3d0def13f3340a2e6ff3ef3458ee4c79381fb88a66",
+    "scripts/windows-acl.ps1": "e96e5656f84ea10cb59014b2d009aebe4885fa4b3e24b382da1e31580a393329",
+    "references/windows.md": "4107b608bf0441012cf2fcc886ec17a2a6c3e4b9ca9a3b3844423380e87350e9"
+  },
+  "checks": [
+    {
+      "id": "A_WINDOWS_TOOLS",
+      "result": "passed",
+      "method": "offline",
+      "source_refs": ["windows-maintenance-validation"],
+      "detail": "All 17 repository tests passed, including Windows private ACL creation/rejection, no-overwrite behavior, directory-junction escape rejection and synthetic HTTP/SSE checks. Original Linux material hashes were restored exactly by LF normalization, without rewriting the original evidence."
+    },
+    {
+      "id": "A_DIAGNOSIS",
+      "result": "passed",
+      "method": "local",
+      "source_refs": ["windows-native-observation", "windows-run-startup"],
+      "detail": "The existing proxy had no listener and used an old static catalog. Its inspected launcher restored loopback-only health 200, no-key 401 and keyed models 200. Refreshed 13 eligible entries matched model/list from the actual extension's bundled app-server. The provider/defaults and startup value were unchanged. The earlier process disappearance remains unexplained."
+    },
+    {
+      "id": "A_PATCH",
+      "result": "not_tested",
+      "method": "offline",
+      "source_refs": ["windows-maintenance-validation"],
+      "detail": "Clean locked installation stopped at the configured mirror's HTTP 404 for pkce-challenge 5.0.2. The official registry failed TLS negotiation through Node and Windows curl. The pinned gateway's four original tests were not executed; no dependency or TLS workaround was substituted."
+    },
+    {
+      "id": "A_SERVICE",
+      "result": "not_tested",
+      "method": "local",
+      "source_refs": ["windows-native-observation"],
+      "detail": "The pre-existing alternative proxy remained responsive after starting its inspected launcher; its original Run entry was preserved. No reference-gateway Windows service was installed, and no logout/reboot was performed."
+    },
+    {
+      "id": "A_AUTH",
+      "result": "not_tested",
+      "method": "local",
+      "source_refs": ["windows-native-observation"],
+      "detail": "Local key-file ACLs and authenticated metadata access of the existing command-authenticated proxy were checked. The reference gateway's config.json/auth.json login layout was not deployed or claimed to pass."
+    },
+    {
+      "id": "A_MODELS",
+      "result": "not_tested",
+      "method": "local",
+      "source_refs": ["windows-native-observation"],
+      "detail": "The existing proxy's catalog and the actual extension's 13-model result agreed; the preserved default model advertised its configured high effort. This does not certify the pinned reference gateway's two HTTP catalog endpoints on Windows."
+    },
+    {
+      "id": "A_SSE",
+      "result": "not_tested",
+      "method": "live",
+      "source_refs": ["windows-native-observation"],
+      "detail": "No real model request was sent because quota permission was unavailable."
+    },
+    {
+      "id": "A_CLI",
+      "result": "not_tested",
+      "method": "live",
+      "source_refs": ["windows-native-observation"],
+      "detail": "No independent CLI inference probe was authorized or performed."
+    },
+    {
+      "id": "A_EXTENSION_CLI",
+      "result": "not_tested",
+      "method": "live",
+      "source_refs": ["windows-native-observation"],
+      "detail": "Bundled app-server initialize/model/list passed without a thread or turn; it is not a CLI inference probe."
+    },
+    {
+      "id": "A_UI",
+      "result": "not_tested",
+      "method": "user",
+      "source_refs": ["windows-native-observation"],
+      "detail": "GUI control was disabled and the user unavailable. The active VS Code window was not reloaded or treated as verified."
+    }
+  ],
+  "limitations": [
+    "This is bounded maintenance and metadata evidence from an existing alternative proxy, not a successful fresh Windows installation of the pinned gateway.",
+    "No account authorization, key rotation, paid inference, real response.completed, CLI turn or GUI conversation was performed.",
+    "The refreshed catalog's historical compatibility exclusions were preserved, not revalidated.",
+    "A current-user Run entry and a live detached process do not prove crash supervision, logout survival or reboot recovery.",
+    "Root maintenance tooling and CI changes are not hashed by this package-local material map; the Windows CI job has not been run by publishing these local changes.",
+    "Private target paths, startup backups, raw logs and credentials are intentionally excluded."
+  ]
+}

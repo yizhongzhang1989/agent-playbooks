@@ -14,6 +14,11 @@ that all other versions must be downgraded.
 Inspect service properties, listener and file metadata without dumping logs,
 tokens or full process environments:
 
+The commands below are Linux-specific. On native Windows, first use
+[Windows identification and recovery](windows.md#identify-the-actual-deployment).
+The configured port, authentication command and static catalog may belong to a
+different proxy; missing `auth.json` alone is not evidence of broken login.
+
 ```bash
 systemctl --user show copilot-gateway.service --no-pager \
   -p LoadState -p ActiveState -p SubState -p MainPID -p UnitFileState
@@ -35,6 +40,7 @@ code --list-extensions --show-versions
 | No-key models request returns200 | API-key list, correct COPILOT_API_HOME | Call unauthenticated access success |
 | Authenticated401 | Distinguish local key mismatch and upstream authorization expiry | Try admin/GitHub/OpenAI keys indiscriminately |
 | Missing model/effort | Real Codex catalog, account capabilities | Invent mappings or silently change defaults |
+| Static model_catalog_json is old | Back up and refresh with that deployment's metadata-only tool; check app-server model/list | Add model names without endpoint/capability evidence |
 | CLI passes, plugin fails | Actual extension host, HOME, backend version, stale processes | Export a variable in an unrelated shell |
 | Only Chat is visible | Command palette → Open Codex Sidebar | Reauthorize the gateway |
 | Pinned version changed | Install Another Version in UI, reload, check actual backend | Edit internal VS Code state or disable all updates |
@@ -46,6 +52,7 @@ code --list-extensions --show-versions
 |misalignment_policy_violation | Actual upstream policy refusal | Treat it as a retryable network failure |
 |Long session/compaction disconnect | Both WebSocket settings, version and transport | Infer long-session support from a short smoke test |
 |Service stops after logout | enabled + Linger=yes and actual user session | Stack temporary background processes |
+|Windows Run entry exists but no listener | Actual launcher, process, startup approval and bounded readiness | Treat a logon entry as a running service or a crash supervisor |
 |Reinstall lost compatibility fix | lockfile, postinstall and stored patch | Patch node_modules without a maintained patch |
 
 Use the offline or catalog phases of [verify.md](verify.md) only as appropriate.

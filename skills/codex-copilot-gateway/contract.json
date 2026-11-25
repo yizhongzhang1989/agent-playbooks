@@ -28,7 +28,11 @@
     "EAI_AGAIN",
     "misalignment_policy_violation",
     "网关鉴权失败",
-    "授权文件为空"
+    "授权文件为空",
+    "Windows Codex",
+    "model_catalog_json",
+    "UNSAFE_GATEWAY_DIRECTORY",
+    "UNSAFE_PERMISSIONS"
   ],
   "use_when": [
     "需要让普通本地 Codex CLI 或 VS Code Codex 使用有权访问的 Copilot 模型",
@@ -338,7 +342,7 @@
       "user_authorization",
       "user_gui_confirmation"
     ],
-    "platform": "Validated: Ubuntu 22.04.5 LTS, Linux x86_64, local VS Code; adapt before other platforms.",
+    "platform": "Ubuntu 22.04.5 LTS / Linux x86_64: prior full source installation. Windows x64: maintenance tests and existing-proxy catalog recovery only; pinned gateway install, inference, UI and logout/reboot unverified.",
     "commands": [
       "bash",
       "curl",
@@ -361,11 +365,11 @@
       "method": "offline"
     },
     "A_SERVICE": {
-      "description": "用户服务active/enabled、Linger=yes且只监听127.0.0.1:4141；不等同于重启整机实测",
+      "description": "Linux用户服务active/enabled、Linger=yes；Windows核对当前用户启动机制与存活进程；仅监听配置的127.0.0.1端口，不等同于重启或注销实测",
       "method": "local"
     },
     "A_AUTH": {
-      "description": "本地普通密钥匹配、私有权限正确、无密钥401且带密钥200",
+      "description": "本地普通密钥匹配、私有权限正确（POSIX mode 600或Windows用户/SYSTEM ACL）、无密钥401且带密钥200",
       "method": "local"
     },
     "A_MODELS": {
@@ -391,6 +395,10 @@
     "A_DIAGNOSIS": {
       "description": "以观察结果定位失败层，区分已知原因与未证实假设，并给出下一步",
       "method": "manual"
+    },
+    "A_WINDOWS_TOOLS": {
+      "description": "Windows维护工具的私有ACL、非覆盖写入、目录边界和合成验证测试通过；不代表固定网关安装、真实推理或GUI成功",
+      "method": "offline"
     },
     "A_ROLLBACK": {
       "description": "仅恢复本次授权的改动，核对原配置及无关数据保留；原先无登录则明确报告",
@@ -418,9 +426,11 @@
     "references/verify.md",
     "references/rollback.md",
     "references/optional.md",
+    "references/windows.md",
     "scripts/create-gateway-config.mjs",
     "scripts/verify.mjs",
     "scripts/common.mjs",
+    "scripts/windows-acl.ps1",
     "assets/templates/copilot-gateway.sh",
     "assets/templates/copilot-gateway.service",
     "assets/templates/codex.config.toml",
@@ -434,7 +444,8 @@
   ],
   "evidence": {
     "current": [
-      "evidence/2026-11-25-ubuntu-22.04-x86_64.json"
+      "evidence/2026-11-25-ubuntu-22.04-x86_64.json",
+      "evidence/2026-11-25-windows-x64.json"
     ],
     "historical": []
   }

@@ -3,6 +3,9 @@
 Operation: `rollback`. This procedure was documented but not executed during
 the source installation. Do not describe it as a tested recovery.
 
+For native Windows, use the [Windows rollback notes](windows.md#rollback).
+Do not run systemd/lingering commands or remove an unrelated startup entry.
+
 ## S00_ESTABLISH_ORIGINAL_STATE
 
 Requires: explicit rollback target and access to the private backup created

@@ -38,6 +38,45 @@
       "kind": "official_documentation",
       "uri": "https://code.visualstudio.com/docs/setup/linux",
       "claims": ["Editor installation prerequisite"]
+    },
+    {
+      "id": "windows-native-observation",
+      "kind": "local_observation",
+      "title": "Native Windows existing-proxy recovery and metadata-only verification",
+      "observed_on": "2026-11-25",
+      "claims": ["A stopped loopback proxy was restored through its existing launcher", "Health 200, no-key 401 and authenticated model metadata 200", "Static catalog refreshed from 11 to 13 eligible entries and loaded by the actual extension app-server"],
+      "note": "Sanitized observation of copilot-proxy-api 0.10.32, Node 26.13.0, PowerShell 7.6.10, VS Code 1.147.0, extension 26.1007.21434 and bundled Codex 0.162.0-alpha.17.2. The original process disappearance was not explained. No inference, GUI, restart/logout test or new account authorization was performed. Raw paths, backups, logs and credentials remain outside this repository."
+    },
+    {
+      "id": "windows-maintenance-validation",
+      "kind": "local_observation",
+      "title": "Windows maintenance regression checks and blocked locked dependency installation",
+      "observed_on": "2026-11-25",
+      "claims": ["17 repository tests passed on Windows x64 with Node 26.13.0", "CRLF-only normalization restored all four original Linux material hashes without changing their evidence", "Windows ACL checks reject unrelated principals", "A directory junction tests resource escape without elevated symlink rights", "The selected npm CLI is invoked through Node"],
+      "note": "The clean locked install failed with HTTP 404 from the configured mirror for pkce-challenge 5.0.2; the official registry also failed TLS negotiation through Node and Windows curl. The pinned gateway's four original tests were not run on this machine. No TLS bypass, version substitution or registry configuration change was made."
+    },
+    {
+      "id": "node-windows-child-process",
+      "kind": "official_documentation",
+      "uri": "https://nodejs.org/api/child_process.html#spawning-bat-and-cmd-files-on-windows",
+      "version": "26.13.0",
+      "observed_on": "2026-11-25",
+      "claims": ["Windows .cmd files cannot be launched directly with execFile"],
+      "note": "Verified against the v26.13.0 Node documentation source; the runner uses node plus npm_execpath rather than interpolating a shell command."
+    },
+    {
+      "id": "windows-acl",
+      "kind": "official_documentation",
+      "uri": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/get-acl?view=powershell-7.5",
+      "observed_on": "2026-11-25",
+      "claims": ["Windows resource permissions are represented by security descriptors and ACLs"]
+    },
+    {
+      "id": "windows-run-startup",
+      "kind": "official_documentation",
+      "uri": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys",
+      "observed_on": "2026-11-25",
+      "claims": ["Run entries start programs at user logon", "Run startup may be delayed and its timing is not guaranteed"]
     }
   ]
 }

@@ -28,10 +28,11 @@ test("resource references cannot escape the skill through traversal or symlinks"
   const temp = await mkdtemp(join(tmpdir(), "playbook-path-test-"));
   t.after(() => rm(temp, { recursive: true, force: true }));
   await mkdir(join(temp, "skill"));
-  await writeFile(join(temp, "outside.txt"), "synthetic");
-  await symlink(join(temp, "outside.txt"), join(temp, "skill/escape"));
-  await assert.rejects(resourcePath(join(temp, "skill"), "../outside.txt"), /Invalid relative resource/);
-  await assert.rejects(resourcePath(join(temp, "skill"), "escape"), /escapes/);
+  await mkdir(join(temp, "outside"));
+  await writeFile(join(temp, "outside/file.txt"), "synthetic");
+  await symlink(join(temp, "outside"), join(temp, "skill/escape"), process.platform === "win32" ? "junction" : "dir");
+  await assert.rejects(resourcePath(join(temp, "skill"), "../outside/file.txt"), /Invalid relative resource/);
+  await assert.rejects(resourcePath(join(temp, "skill"), "escape/file.txt"), /escapes/);
 });
 
 test("successful outcomes require every operation-specific acceptance item", async () => {

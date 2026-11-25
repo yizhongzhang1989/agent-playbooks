@@ -1,21 +1,24 @@
-import { cp, mkdir, mkdtemp, rm } from "node:fs/promises";
+import { cp, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { ROOT } from "./lib.mjs";
 import { createGatewayConfig } from "../skills/codex-copilot-gateway/scripts/create-gateway-config.mjs";
+import { createPrivateDirectory } from "../skills/codex-copilot-gateway/scripts/common.mjs";
 
 const execute = promisify(execFile);
+const npmCli = process.env.npm_execpath;
+if (!npmCli) throw new Error("Run this check through npm run test:gateway so the selected npm CLI is explicit.");
 const target = await mkdtemp(join(tmpdir(), "agent-playbooks-gateway-"));
 try {
   await cp(resolve(ROOT, "skills/codex-copilot-gateway/tools"), join(target, "tools"), {
     recursive: true,
     filter: path => !path.split(/[\\/]/).includes("node_modules"),
   });
-  await mkdir(join(target, "gateway"), { mode: 0o700 });
+  await createPrivateDirectory(join(target, "gateway"));
   await createGatewayConfig(target);
-  const installed = await execute("npm", ["ci", "--prefix", join(target, "tools"), "--no-audit", "--no-fund"], {
+  const installed = await execute(process.execPath, [npmCli, "ci", "--prefix", join(target, "tools"), "--no-audit", "--no-fund"], {
     timeout: 180000, maxBuffer: 4 * 1024 * 1024,
   });
   process.stderr.write(installed.stdout);

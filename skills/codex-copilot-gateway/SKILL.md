@@ -1,10 +1,10 @@
 ---
 name: codex-copilot-gateway
-description: 配置、诊断和验证 Codex CLI 或 VS Code Codex 通过本地 GitHub Copilot 网关使用 Responses API。适用于 Codex 反向代理、copilot-gateway、401、流在 response.completed 前结束、插件找不到模型或只显示 Chat 的问题；不是系统 HTTP/HTTPS 正向代理教程。
+description: 配置、诊断和验证 Codex CLI 或 VS Code Codex 通过本地 GitHub Copilot 网关使用 Responses API。包含原生 Windows 已有代理诊断与模型目录刷新；适用于 Codex 反向代理、copilot-gateway、401、流在 response.completed 前结束、插件找不到模型或只显示 Chat 的问题；不是系统 HTTP/HTTPS 正向代理教程。
 license: MIT
 metadata:
   language: zh-CN,en
-  compatibility: 已验证 Ubuntu 22.04.5 LTS、Linux x86_64、普通本地 VS Code。需要本机文件与 shell 能力；授权及 GUI 验收需要用户参与。其他平台需先适配。
+  compatibility: Ubuntu 22.04.5 LTS 有历史完整安装证据；Windows x64 已验证维护工具与已有代理的模型元数据恢复，未验证固定网关新装、真实推理、GUI 或重启。需要本机文件与 shell 能力；授权及 GUI 验收需要用户参与。
 ---
 
 # Codex through a local Copilot gateway
@@ -25,6 +25,8 @@ This package is not automatically registered with any AI client.
 
 Unclear goal or existing installation: inspect first. Do not silently reinstall,
 rotate credentials, downgrade extensions, restart services or choose another model.
+For native Windows, also read the applicable sections of
+[windows.md](references/windows.md); do not run the Linux service commands there.
 
 ## Scope and invariants
 
@@ -49,9 +51,13 @@ The [source-installation record](evidence/2026-11-25-ubuntu-22.04-x86_64.json)
 records a real prior installation, including two CLI probes and user-confirmed
 VS Code UI success. It is not a new-machine execution of this migrated package.
 
-Only four original offline checks are bundled; they do not constitute full
-transport coverage. Other platforms, isolated CLI, SSH forwarding, long-session
-compression, logout and full-machine reboot are not validated here.
+Four original gateway checks and repository maintenance tests are bundled; they
+do not constitute full transport coverage. The
+[Windows record](evidence/2026-11-25-windows-x64.json) distinguishes passing
+maintenance/metadata checks from the blocked locked installation and untested
+inference/UI. It is not a second full installation success. Other platforms,
+isolated CLI, SSH forwarding, long-session compression, logout and full-machine
+reboot are not validated here.
 See [optional paths](references/optional.md) only when explicitly needed.
 
 ## Verify and report

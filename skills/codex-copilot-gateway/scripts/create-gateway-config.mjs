@@ -3,7 +3,7 @@ import { lstat, realpath, writeFile } from "node:fs/promises";
 import { dirname, join, sep } from "node:path";
 import { parseArgs } from "node:util";
 import { fileURLToPath } from "node:url";
-import { absolutePath, check, cli, isMain, readPrivateJson } from "./common.mjs";
+import { absolutePath, check, cli, isMain, privateDirectory, readPrivateJson } from "./common.mjs";
 
 export async function createGatewayConfig(root) {
   const target = await realpath(absolutePath(root));
@@ -19,9 +19,7 @@ export async function createGatewayConfig(root) {
     }
     if (dirname(directory) === directory) break;
   }
-  const gateway = await lstat(join(target, "gateway"));
-  check(gateway.isDirectory() && !gateway.isSymbolicLink() && (gateway.mode & 0o777) === 0o700,
-    "UNSAFE_GATEWAY_DIRECTORY", "Create a private mode-700 gateway directory, not a symlink.");
+  await privateDirectory(join(target, "gateway"));
   const config = await readPrivateJson(new URL("../assets/templates/gateway.config.example.json", import.meta.url), "Gateway template");
   check(config.auth.apiKeys.length === 0 && config.auth.adminApiKey === "", "NONEMPTY_TEMPLATE", "The source template must not contain credentials.");
   config.auth.apiKeys = ["local-" + randomBytes(32).toString("hex")];

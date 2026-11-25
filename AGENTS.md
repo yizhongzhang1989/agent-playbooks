@@ -1,5 +1,17 @@
 # Agent entrypoint
 
+## Minimal changes
+
+- Change only what is necessary for the current request. Preserve unrelated
+  files, behavior and existing user changes; do not add opportunistic cleanup.
+- Do not refactor, reformat, rename, update dependencies or normalize line endings
+  outside the required scope.
+- Update directly affected tests, documentation and generated files only when
+  needed for the requested change or its validation.
+- Investigate unexpected modified files before rewriting or restoring them.
+  Distinguish real content changes from Git metadata or line-ending noise, and
+  remove only incidental changes introduced by the current task.
+
 ## Discover
 
 - This repository stores reusable task procedures, not private run history.

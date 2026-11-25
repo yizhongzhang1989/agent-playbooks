@@ -4,6 +4,12 @@ Operation: `verify`. Read the mandatory acceptance IDs in
 [contract.json](../contract.json). A probe's JSON `status=passed` only applies to
 that phase; it does not certify the plugin, a new machine or persistence.
 
+The shell/service examples below target Linux. Native Windows uses
+[windows.md](windows.md), Windows ACLs and the extension's
+`bin\windows-x86_64\codex.exe`. The scripts support Windows ACL checks for the
+reference gateway layout, not arbitrary pre-existing proxies or authentication
+commands. Metadata-only `model/list` success does not satisfy A_CLI or A_UI.
+
 In each fresh shell, set `SKILL_ROOT` to the actual skill directory,
 `ROOT="$HOME/.local/share/codex-copilot"` and
 `PATH="$ROOT/runtime/bin:$HOME/.local/bin:$PATH"`. Run from the repository root

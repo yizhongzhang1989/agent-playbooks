@@ -65,6 +65,11 @@ VS Code 已安装，这台机器还没有网关。先按 AGENTS.md 检索和检�
 AI 应进入安装参考并先检查目标环境。CLI 探测通过不能代替实际 VS Code UI 验收；
 缺少 UI 证据时，应明确交接剩余步骤。上面的“开始使用”提示词则演示了已有部署的诊断。
 
+原生 Windows 请同时阅读 [Windows 补充](skills/codex-copilot-gateway/references/windows.md)，
+不要照搬 systemd、chmod 或 Linux 路径。当前 Windows 证据覆盖维护工具和已有代理的模型
+元数据恢复，不包含固定网关新装、真实推理、GUI 或重启验收；具体限制见该技能的 findings。
+PowerShell 中的维护命令使用 `npm.cmd`；仓库不会自动替换这台机器已有的代理或登录。
+
 ### 示例二：中断后在新会话继续
 
 中断前，让 AI 按 [run schema](schemas/run.schema.json) 将实际进度保存在仓库外的私有 JSON，
@@ -149,7 +154,7 @@ npm test
 
 | 技能 | 生命周期 | 适用范围 |
 |---|---|---|
-| [codex-copilot-gateway](skills/codex-copilot-gateway/SKILL.md) | active | 配置、诊断和验证 Codex CLI 或 VS Code Codex 通过本地 GitHub Copilot 网关使用 Responses API。适用于 Codex 反向代理、copilot-gateway、401、流在 response.completed 前结束、插件找不到模型或只显示 Chat 的问题；不是系统 HTTP/HTTPS 正向代理教程。 |
+| [codex-copilot-gateway](skills/codex-copilot-gateway/SKILL.md) | active | 配置、诊断和验证 Codex CLI 或 VS Code Codex 通过本地 GitHub Copilot 网关使用 Responses API。包含原生 Windows 已有代理诊断与模型目录刷新；适用于 Codex 反向代理、copilot-gateway、401、流在 response.completed 前结束、插件找不到模型或只显示 Chat 的问题；不是系统 HTTP/HTTPS 正向代理教程。 |
 
 ## 边界
 

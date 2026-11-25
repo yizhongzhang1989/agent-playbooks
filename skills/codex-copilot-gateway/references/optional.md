@@ -9,6 +9,8 @@ the source installation or repository offline tests.
   adapting. Selecting an arm64 Node archive does not validate the whole stack.
 - WSL2: systemd is the closest route, but first locate Codex and gateway in the
   same machine/network namespace. Native Windows cannot reuse Bash/systemd verbatim.
+- Native Windows: see [windows.md](windows.md) for tested maintenance helpers and
+  existing-proxy metadata recovery, plus the still-unverified installation/live/UI scope.
 - macOS: needs its own runtime and launchd/service procedure; not implemented here.
 - Remote SSH/containers: `127.0.0.1` refers to the process's own namespace.
   Do not solve namespace separation by exposing an authenticated service publicly.
