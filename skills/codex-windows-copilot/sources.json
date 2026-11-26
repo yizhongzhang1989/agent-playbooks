@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "messages-edge-fixes-2026-11-26",
+      "kind": "local_observation",
+      "observed_on": "2026-11-26",
+      "locators": ["scripts/messages.mjs", "tests/bridge.test.mjs"],
+      "claims": ["Two in-memory reproductions exposed rejected mixed assistant/tool history and premature parsing of truncated tool JSON", "Current32 package tests preserve same-turn assistant content, enforce tool-result ordering and distinguish incomplete from malformed completed calls", "All completed tool arguments are validated before any executable completion event is emitted"],
+      "note": "Synthetic offline verification only. No real model requests or changes to deployed private runtime copies were made for these commit-readiness corrections."
+    },
+    {
+      "id": "target-deployment-record-review-2026-11-26",
+      "kind": "local_observation",
+      "observed_on": "2026-11-26",
+      "claims": [
+        "Preserved same-day records establish bounded through-bridge SSE and isolated CLI success for GitHub gpt-6-astra/high and Windows gpt-5.6-sol/none, plus user-operated target UI success for both sources",
+        "Later records establish Opus5.5/high native and converted streams, a fixed tool roundtrip, actual Codex patch creation and an explicit-path read, and a user-operated Opus UI completion",
+        "The original target thread persisted on-request and restricted workspace permissions after the normal Ask for approval UI selection; subsequent explicitly authorized host-managed bridge deployment succeeded",
+        "An existing expired relay returned models401 before a separately started public keepalive worker restored a newer token and models200; that standalone worker required independent ownership tracking",
+        "One UI turn consumed two model requests, exhausting a temporary local budget; approved normal-use activation removed the test-budget reference while retaining accounting",
+        "A selected UI model changed the persisted default; an isolated model/list catalog default also differed from the configured probe model",
+        "A relative-path read failed after successful patch creation; explicitly providing workdir and an absolute target subsequently passed without changing the shell or proxy",
+        "The opaque-history repair passed two real GitHub/high synthetic-history requests, including reuse of one real native reasoning item; later user-created UI turns also completed",
+        "The target catalog contained13 GitHub and9 Windows models, but the remaining Claude models and all efforts were not individually live-verified"
+      ],
+      "note": "User explicitly approved these sanitized technical summaries for repository documentation. This is a review of preserved prior results, not fresh inference or a pristine-machine deployment. Manual UI checks used a user-selected workspace, not the automated empty-directory fixture. The original rejected command/classifier was not independently replayed, and the original encrypted-error thread had no independently observed later retry. No private identifiers, paths, account data, raw logs or conversation contents are included."
+    },
+    {
+      "id": "codex-windows-approval-guidance-2026-11-26",
+      "kind": "official_documentation",
+      "uri": "https://learn.chatgpt.com/docs/agent-approvals-security",
+      "observed_on": "2026-11-26",
+      "locators": [
+        "https://github.com/openai/codex/blob/rust-v0.162.0-alpha.17.2/codex-rs/core/src/exec_policy.rs",
+        "https://github.com/openai/codex/blob/rust-v0.162.0-alpha.17.2/codex-rs/shell-command/src/command_safety/windows_dangerous_commands.rs",
+        "https://github.com/openai/codex/issues/52543"
+      ],
+      "claims": ["Approval policy is distinct from sandbox access; never can reject commands that need review while on-request provides an interactive approval path", "The matching Windows source contains a URL-launch heuristic; it is a source-supported candidate explanation, not an instrumented diagnosis of every blocked command"],
+      "note": "These official documents/source and the separately labelled community case were retrieved during the preceding investigation. Existing managed denials remain authoritative; no alternate executor, disabled safeguard or blanket allow rule is recommended."
+    },
+    {
+      "id": "deployment-guidance-audit-2026-11-26",
+      "kind": "local_observation",
+      "observed_on": "2026-11-26",
+      "locators": ["references/install.md", "references/diagnose.md", "references/verify.md", "references/rollback.md", "scripts/bridge.mjs"],
+      "claims": ["The maintained guide now orders new-machine prerequisites and gates, includes a private key-reader example and complete provider capability settings, and separates test budgets from normal operation", "The existing bridge requires distinct64-character lowercase hexadecimal local keys and an already compatible GitHub catalog", "No complete pristine-machine rebuild, arbitrary GitHub gateway/key format, reboot persistence or all-model acceptance is established by the observed target success"],
+      "note": "Documentation/source audit only. Runtime code and services were not changed or re-executed to manufacture deployment evidence."
+    },
+    {
+      "id": "messages-state-boundary-offline-2026-11-26",
+      "kind": "local_observation",
+      "observed_on": "2026-11-26",
+      "locators": ["scripts/bridge.mjs", "scripts/messages.mjs", "tests/bridge.test.mjs"],
+      "claims": ["Messages output uses adapter-owned rs_wcm_ IDs and wcm1. ciphertext, which a native Responses backend cannot interpret", "A synthetic native endpoint reproduced rejection before outbound history normalization", "The bounded fix omits only dual-marked reasoning on native routes and preserves native opaque state, visible history and tool history", "Same-Messages-model authenticated thinking roundtrips continue to pass"],
+      "note": "Offline reproduction and source inspection, not a blanket cross-provider history guarantee. No private conversation, decrypted thinking or account payload is included in public evidence."
+    },
+    {
+      "id": "messages-protocol-2026-11-26",
+      "kind": "official_documentation",
+      "uri": "https://platform.claude.com/docs/en/build-with-claude/streaming",
+      "observed_on": "2026-11-26",
+      "locators": ["https://platform.claude.com/docs/en/build-with-claude/thinking", "https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost", "https://github.com/openai/codex/blob/rust-v0.162.0-alpha.17.2/codex-rs/protocol/src/models.rs"],
+      "claims": ["Messages streaming uses message_start, content blocks, message_delta and message_stop; usage deltas are cumulative", "Thinking/signatures must be returned unchanged, particularly through tool use", "Adaptive thinking and output_config.effort are distinct controls; forced tool choice is not supported for Opus5.5", "Codex response items distinguish function calls, namespaces, custom tool calls and encrypted reasoning"],
+      "note": "Official pages and the matching Codex source tag were retrieved. Windows model IDs, endpoint eligibility and its narrower thinking/max-token rules still come from actual metadata and the provided App history, not Anthropic's public model names."
+    },
+    {
+      "id": "messages-prior-art-2026-11-26",
+      "kind": "public_documentation",
+      "uri": "https://github.com/nicholasyangyang/codex-bridge",
+      "observed_on": "2026-11-26",
+      "locators": ["https://github.com/tokligence/tokligence-gateway/blob/main/docs/codex-to-anthropic.md", "https://github.com/Jer-y/copilot-proxy/blob/main/docs/protocol-compatibility.md"],
+      "claims": ["Public bridges describe Responses-to-Messages translation for Codex", "Some documented implementations discard thinking or filter client tools, so their advertised compatibility is not sufficient evidence for this package", "The fetched Jer-y project documentation removes cross-protocol translation despite older indexed search snippets advertising it"],
+      "note": "Design research only. No third-party adapter code, dependencies, account configuration or alternate hosted endpoint was installed."
+    },
+    {
+      "id": "messages-offline-2026-11-26",
+      "kind": "local_observation",
+      "observed_on": "2026-11-26",
+      "claims": ["Opt-in endpoint-metadata routing retains original native routes", "Synthetic Messages tests preserve namespace/freeform tool identities and authenticated encrypted thinking across stateless requests", "Synthetic SSE tests check incremental delivery, usage, terminal events, explicit unsupported inputs and incomplete/error handling", "A local mock captured the installed Codex request shape with function, custom and namespace tools without contacting any model provider"],
+      "note": "Bounded offline claims; exact executed checks are recorded in current evidence. Real account, GUI and per-model results remain private and are not inferred from these regressions."
+    },
+    {
+      "id": "provided-app-source",
+      "kind": "provided_source_code",
+      "uri": "https://github.com/madderscientist/copilot-app-proxy",
+      "revision": "cfb409bbce234f0ce8e80c89f21bf7afe79a6e87",
+      "version": "0.2.0",
+      "observed_on": "2026-11-25",
+      "locators": ["pyproject.toml", "copilot_app_proxy/gateway.py", "copilot_app_proxy/relay_addon.py", "copilot_app_proxy/cli/launcher.py", "copilot_app_proxy/cli/keepalive.py", "copilot_app_proxy/cli/__main__.py", "copilot_app_proxy/cli/config.py", "copilot_app_proxy/cli/diagnostics.py"],
+      "claims": ["App-specific token relay and loopback Responses/Messages routes", "Current-user CA and App restart effects", "Default keepalive and DPAPI cache", "Original local model endpoints do not authenticate callers", "vscode-config has a historical fallback"],
+      "note": "User-provided local source was inspected at this commit with a clean worktree. Not a fresh upstream audit or permission to operate accounts. External source/dependencies are not copied into this skill."
+    },
+    {
+      "id": "provided-app-history",
+      "kind": "provided_document",
+      "uri": "https://github.com/madderscientist/copilot-app-proxy/blob/cfb409bbce234f0ce8e80c89f21bf7afe79a6e87/API-DISCOVERY.md",
+      "observed_on": "2026-11-25",
+      "claims": ["Historical App Code model protocol, headers, supported_endpoints and token-renewal observations", "Historical native Responses and function-call roundtrip observations", "Codex CLI explicitly untested in source history", "Chat/Sydney and web runtime are not interchangeable with App Code model API"],
+      "note": "Bounded historical claims from supplied material, not independently rerun on this target. Historical approval never carries into this run."
+    },
+    {
+      "id": "codex-config-advanced",
+      "kind": "official_documentation",
+      "uri": "https://developers.openai.com/codex/config-advanced/",
+      "observed_on": "2026-11-25",
+      "claims": ["Custom Responses providers and command authentication", "Separate named profile files and 0.134+ legacy profile change", "User-level provider settings rather than project-local overrides"],
+      "note": "Page fetched. The attempted official /search route returned 404; this and the config-reference page were retrieved directly. Client behavior still requires actual installed-binary verification."
+    },
+    {
+      "id": "codex-config-reference",
+      "kind": "official_documentation",
+      "uri": "https://developers.openai.com/codex/config-reference/",
+      "observed_on": "2026-11-25",
+      "claims": ["Responses wire API", "model_catalog_json", "Provider configuration and transport capabilities"]
+    },
+    {
+      "id": "target-preflight",
+      "kind": "local_observation",
+      "observed_on": "2026-11-25",
+      "claims": ["Existing GitHub loopback listener and no-key401/keyed-models200", "13-entry existing Codex catalog retained", "Windows App relay was not listening", "Supplied .venv lacked python.exe and referenced Python 3.6.8", "Actual installed bundled Codex was 0.162.0-alpha.17.2; App product version 159.0.4402.13"],
+      "note": "Read-only preflight; no account authorization, CA trust change, App restart, real inference or GUI turn. /health returned404 with auth: no health success claimed. Private identifiers, credentials and baselines remain outside the repository."
+    },
+    {
+      "id": "bridge-offline",
+      "kind": "local_observation",
+      "observed_on": "2026-11-25",
+      "claims": ["Synthetic loopback route separation and credential isolation", "GitHub catalog preservation and explicit Windows IDs", "No redirects, retries, model fallback or fabricated success on truncation"],
+      "note": "Repository synthetic tests use invented credentials/models and local mock servers, never real accounts or quota. Scope and actual test result recorded in evidence; not native upstream or UI proof."
+    },
+    {
+      "id": "app-offline",
+      "kind": "local_observation",
+      "observed_on": "2026-11-25",
+      "claims": ["A new private runtime source copy and Python 3.13.5 environment installed the exact mitmproxy 12.3.1 requirement without replacing the old .venv", "55 supplied pytest tests and ruff passed", "doctor found Python, mitmdump, Copilot App and two free loopback ports", "Current-user/SYSTEM private ACLs checked on runtime and baseline backup"],
+      "note": "Resolved aiohttp 3.14.5, pytest 9.2.0, pytest-asyncio 1.5.0 and ruff 0.17.5; complete dependency snapshot remains private. No real CA trust, App restart, relay capture or inference. Tests use synthetic data and mocked certificate/process operations."
+    },
+    {
+      "id": "codex-synthetic-catalog",
+      "kind": "local_observation",
+      "observed_on": "2026-11-25",
+      "claims": ["Installed Codex 0.162.0-alpha.17.2 app-server accepted 13 unchanged GitHub entries plus one explicitly synthetic windows-copilot/ entry in an isolated CODEX_HOME", "initialize and model/list succeeded without starting a thread or inference", "Production config, GitHub catalog and launcher hashes remained unchanged"],
+      "note": "The extra Windows entry was invented solely to test parser compatibility. It proves neither account entitlement nor a real Windows model catalog; test process was stopped."
+    },
+    {
+      "id": "repository-check-limitation",
+      "kind": "local_observation",
+      "observed_on": "2026-11-25",
+      "claims": ["npm run check reached the legacy GitHub gateway dependency installation after validation and repository tests", "The configured mirror returned404 for locked pkce-challenge 5.0.2, so the four legacy gateway tests did not execute"],
+      "note": "Existing known failure in the other skill, not a new bridge dependency. No lockfile, registry, TLS or live GitHub installation was changed. Do not report the whole npm run check as passing."
+    },
+    {
+      "id": "windows-cert-provider-2026-11-26",
+      "kind": "local_observation",
+      "observed_on": "2026-11-26",
+      "claims": ["Windows PowerShell 5.1 child listed no Certificate provider; Test-Path returned False despite successful certutil trust", "Explicit import of the child's own PSHOME security module made the same check True", "The exact leftover per-run CA was removed, a pinned-source backup-preserving patch applied, and all55 supplied pytest tests passed again", "A subsequent authorized start succeeded without disabling TLS"],
+      "note": "Observed target-specific module-loading difference, not a claim about every Windows installation. The cause of the missing automatic provider load was not further established. Runtime source/archive CRLF matched each other and normalized content matched the pinned Git blob; original source checkout and evidence bytes were preserved."
+    },
+    {
+      "id": "windows-direct-live-2026-11-26",
+      "kind": "local_observation",
+      "observed_on": "2026-11-26",
+      "claims": ["Authorized no-keepalive App relay startup and actual model metadata200", "Nine App models: four native Responses and five Messages-only", "Merged catalog prepared with13 unchanged GitHub entries and four prefixed Windows entries", "One direct gpt-5.6-sol Responses request returnedHTTP200/SSE, exactly one real response.completed and the exact COPILOT_DUAL_OK marker with no failure event"],
+      "note": "Exactly one reserved inference request was used from the approved maximum8, with none reasoning and fixed non-sensitive input. Direct App relay only: no new bridge, Codex inference or UI success. Current-user/SYSTEM ACLs passed for .local, DPAPI cache and CA private-key file; only the expected new CA remained and system proxy/config/catalog/launcher baselines were unchanged. Raw records, token cache and CA material remain private."
+    },
+    {
+      "id": "host-command-rejection-2026-11-26",
+      "kind": "local_observation",
+      "observed_on": "2026-11-26",
+      "claims": ["The host rejected a combined private configuration/background bridge launch command before execution", "A later configuration-preparation-only command was also rejected before execution", "Read-only checks showed the bridge was not listening and the intended bridge/configuration files had not been created"],
+      "note": "Both tool responses said blocked by policy without a narrower reason. This does not establish a blanket Windows restriction or identify a forbidden keyword. No alternate shell/encoded command/launch entry was used to perform the rejected action; direct already-running App API verification is recorded separately."
+    },
+    {
+      "id": "bounded-tests-2026-11-26",
+      "kind": "local_observation",
+      "observed_on": "2026-11-26",
+      "claims": ["All12 package Node regressions and all29 repository maintenance tests passed", "Five standard-library Python patch tests passed; the actual patched runtime was idempotently recognized", "The optional request ledger persisted usage across synthetic bridge restarts and rejected exhausted or corrupt state without upstream calls", "The full npm run check again failed at the legacy locked pkce-challenge5.0.2 mirror404 before its four gateway tests"],
+      "note": "Quota enforcement was tested only with mock servers; it was not deployed because host setup commands were rejected. The one direct Windows request used a separate private reservation record. No root dependency, registry, TLS setting or running GitHub service was changed to make the legacy gate pass."
+    }
+  ]
+}

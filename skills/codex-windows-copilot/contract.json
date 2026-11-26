@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "id": "codex-windows-copilot",
+  "lifecycle": "draft",
+  "tags": ["codex", "windows-copilot", "responses", "messages", "local-proxy"],
+  "aliases": ["Windows Copilot", "Microsoft Copilot App", "Copilot App Code", "copilot-app-proxy", "双来源模型", "Windows Copilot反向代理", "windows-copilot/", "gpt-61-sol", "windows_compaction_unverified", "Claude Opus", "claude-opus-5.5", "Messages转Responses"],
+  "use_when": ["本人获准使用的 Windows Copilot App Code 模型需要接入 Codex", "保留原 GitHub Copilot 模型并明确区分两种账号来源", "诊断本机 App relay、双来源 Responses 或目录接入", "通过显式兼容层接入原生 Messages 的 Claude/Opus 模型"],
+  "avoid_when": ["只有消费版 Chat、Sydney 或网页云端 agent，目标并非 App Code 原生模型", "需要绕过账号、组织、地区、模型白名单或额度限制", "不受信任的多用户主机尚未解决原 App relay 无鉴权风险"],
+  "input_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["operation"],
+    "properties": {
+      "operation": {"enum": ["diagnose", "install", "verify", "rollback"]},
+      "model": {"type": "string", "minLength": 1},
+      "reasoning_effort": {"type": "string", "minLength": 1},
+      "live_probe": {"type": "boolean", "default": false}
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["operation", "status", "checks", "remaining"],
+    "properties": {
+      "operation": {"enum": ["diagnose", "install", "verify", "rollback"]},
+      "status": {"enum": ["succeeded", "failed", "blocked", "waiting_for_user"]},
+      "checks": {"type": "object", "minProperties": 1, "additionalProperties": {"enum": ["passed", "failed", "not_tested"]}},
+      "remaining": {"type": "array", "items": {"type": "string"}}
+    },
+    "allOf": [
+      {
+        "if": {"properties": {"status": {"const": "succeeded"}}},
+        "then": {"properties": {
+          "checks": {"type": "object", "additionalProperties": {"const": "passed"}},
+          "remaining": {"type": "array", "maxItems": 0}
+        }}
+      },
+      {
+        "if": {"properties": {"status": {"const": "succeeded"}, "operation": {"enum": ["install", "verify"]}}},
+        "then": {"properties": {"checks": {
+          "type": "object",
+          "properties": {"A_OFFLINE": {}, "A_RELAY": {}, "A_AUTH": {}, "A_CATALOG": {}, "A_GITHUB": {}, "A_WINDOWS": {}, "A_TOOLS": {}, "A_CLI": {}, "A_UI": {}},
+          "required": ["A_OFFLINE", "A_RELAY", "A_AUTH", "A_CATALOG", "A_GITHUB", "A_WINDOWS", "A_TOOLS", "A_CLI", "A_UI"]
+        }}}
+      },
+      {
+        "if": {"properties": {"status": {"const": "succeeded"}, "operation": {"const": "diagnose"}}},
+        "then": {"properties": {"checks": {"type": "object", "properties": {"A_DIAGNOSIS": {}}, "required": ["A_DIAGNOSIS"]}}}
+      },
+      {
+        "if": {"properties": {"status": {"const": "succeeded"}, "operation": {"const": "rollback"}}},
+        "then": {"properties": {"checks": {"type": "object", "properties": {"A_ROLLBACK": {}}, "required": ["A_ROLLBACK"]}}}
+      }
+    ]
+  },
+  "operations": [
+    {
+      "id": "diagnose", "entrypoint": "references/diagnose.md",
+      "preconditions": ["目标用户、机器、客户端和源项目可确定"],
+      "effects": ["local_read", "optional_gateway_metadata_request"],
+      "confirmation": ["扩大到账号授权、证书、服务变更或真实请求"],
+      "required_acceptance": ["A_DIAGNOSIS"]
+    },
+    {
+      "id": "install", "entrypoint": "references/install.md",
+      "preconditions": ["本人及组织允许 App Code 模型中继", "原 GitHub 路由与 Codex 已备份且无配置冲突"],
+      "effects": ["dependency_download", "private_file_write", "current_user_certificate_change", "app_restart", "account_token_relay", "client_configuration", "optional_paid_request"],
+      "confirmation": ["当前用户 CA 信任、App 重启和进程代理", "本人会话访问令牌中继及正常登录", "自动续期的持续 App 重启", "有界真实请求额度", "Codex 默认路由切换和 GUI 重载"],
+      "required_acceptance": ["A_OFFLINE", "A_RELAY", "A_AUTH", "A_CATALOG", "A_GITHUB", "A_WINDOWS", "A_TOOLS", "A_CLI", "A_UI"]
+    },
+    {
+      "id": "verify", "entrypoint": "references/verify.md",
+      "preconditions": ["两端实际部署可识别", "每个来源精确模型和请求预算已明确"],
+      "effects": ["local_read", "gateway_metadata_request", "optional_paid_request", "temporary_probe_files"],
+      "confirmation": ["本人账号与额度使用", "GUI 验收", "另行批准的续期、注销或重启试验"],
+      "required_acceptance": ["A_OFFLINE", "A_RELAY", "A_AUTH", "A_CATALOG", "A_GITHUB", "A_WINDOWS", "A_TOOLS", "A_CLI", "A_UI"]
+    },
+    {
+      "id": "rollback", "entrypoint": "references/rollback.md",
+      "preconditions": ["本次备份和变更后哈希可核对", "不存在未审查的后续配置变更"],
+      "effects": ["private_file_restore", "owned_process_stop", "app_stop", "current_user_certificate_removal"],
+      "confirmation": ["本次进程/App 中断和证书清理", "删除私有缓存、证书私钥或备份"],
+      "required_acceptance": ["A_ROLLBACK"]
+    }
+  ],
+  "dependencies": {
+    "capabilities": ["local_shell", "local_file_read", "current_user_certificate_management", "user_account_consent", "user_gui_confirmation"],
+    "platform": "Native Windows x64; Node standard-library bridge with opt-in Messages conversion. External App relay0.2.0 at cfb409bbce234f0ce8e80c89f21bf7afe79a6e87 requires Python3.12+ and mitmproxy12.3.1. Selected-model target results were reviewed; pristine-machine, all-model and reboot acceptance remain pending.",
+    "commands": ["node", "python", "powershell", "codex", "git"]
+  },
+  "acceptance": {
+    "A_GUIDANCE": {"method": "manual", "description": "部署说明、问题状态与已获准脱敏的目标记录及当前实现一致；区分记录复核和新机器实际执行"},
+    "A_DIAGNOSIS": {"method": "manual", "description": "用实际配置、端口、源版本和能力定位差距，不把历史授权或元数据当成 live 成功"},
+    "A_OFFLINE": {"method": "offline", "description": "目录/分流安全回归、仓库验证与外部 relay 离线测试通过；区分未执行依赖检查"},
+    "A_BRIDGE_OFFLINE": {"method": "offline", "description": "本包 Node 原生分流及 Messages 转换的合成回归通过，不等同于外部 relay、真实账号或全库 dependency gate"},
+    "A_CATALOG_PARSE": {"method": "local", "description": "实际 Codex app-server 在隔离 home 读取合成双来源目录；仅验证客户端解析，不验证 Windows 权限"},
+    "A_UPSTREAM_SSE": {"method": "live", "description": "直接请求当前 App relay 的真实 Responses SSE、completed 和精确标记；不证明 bridge、Codex 或 UI"},
+    "A_RELAY": {"method": "local", "description": "获准的 App Code 中继真实取到本人 token、实际模型列表成功，CA/进程代理/私有 ACL 与监听符合授权"},
+    "A_AUTH": {"method": "local", "description": "bridge/GitHub 无密钥401、普通密钥成功，密钥与Microsoft token隔离，原relay无本地鉴权的单用户风险已确认"},
+    "A_CATALOG": {"method": "local", "description": "当前 metadata 合并后由实际 Codex model/list 读取，两来源重名有区分，GitHub 条目和默认值保持"},
+    "A_GITHUB": {"method": "live", "description": "原 GitHub 模型通过桥接真实 SSE completed 和精确标记，既有能力仍可用"},
+    "A_WINDOWS": {"method": "live", "description": "明确 Windows 模型通过桥接真实 SSE completed 和精确标记，无失败事件"},
+    "A_TOOLS": {"method": "live", "description": "目标 Windows 模型经原生或 Messages 转换完成工具调用及结果两轮；保留必要思考状态，未执行不受信任 shell"},
+    "A_CLI": {"method": "live", "description": "目标实际 Codex 二进制在空目录用双来源路由各完成一个有界真实回合"},
+    "A_UI": {"method": "user", "description": "目标普通客户端新会话可选且实际使用两种来源，由真实GUI或用户确认"},
+    "A_ROLLBACK": {"method": "manual", "description": "恢复本次 Codex 修改，原 GitHub 不受影响，本次 owned 进程与临时 CA 清理已核对"}
+  },
+  "limits": {
+    "request_timeout_seconds": 120, "cli_timeout_seconds": 180, "automatic_retries": 0,
+    "stop_when": ["缺少证书/App重启/本人账号/额度许可", "组织策略、授权或模型拒绝", "未知端口或文件冲突", "上游模型/协议/版本不匹配", "敏感数据或CA无法保持私有", "目标UI或真实请求尚无证据时不得宣告完成"]
+  },
+  "resources": ["sources.json", "findings.json", "references/diagnose.md", "references/install.md", "references/verify.md", "references/rollback.md", "scripts/catalog.mjs", "scripts/bridge.mjs", "scripts/messages.mjs", "scripts/budget.mjs", "scripts/patch-cert-provider.py", "tests/bridge.test.mjs", "tests/test_cert_patch.py"],
+  "evidence": {"current": ["evidence/2026-11-26-messages-edge-fixes.json"], "historical": ["evidence/2026-11-25-windows-offline.json", "evidence/2026-11-26-windows-relay-partial.json", "evidence/2026-11-26-messages-offline.json", "evidence/2026-11-26-messages-switch-offline.json", "evidence/2026-11-26-deployment-guide-review.json"]}
+}

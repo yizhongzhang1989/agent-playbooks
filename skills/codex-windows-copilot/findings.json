@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "findings": [
+    {
+      "id": "assistant-text-after-tool-use",
+      "kind": "problem", "status": "resolved", "blocking": false,
+      "summary": "A completed tool-use response with trailing assistant text could not be converted back into Messages history.",
+      "observed_on": "2026-11-26",
+      "applies_to": ["Messages mixed assistant text/tool content", "Parallel tool-result ordering"],
+      "operations": ["install", "verify"],
+      "aliases": ["messages_tool_results_required", "assistant text after tool_use"],
+      "source_refs": ["messages-edge-fixes-2026-11-26"],
+      "resolution": {
+        "reason": "Permit text to continue the same assistant turn while tools are pending, but do not allow a new user turn or a new assistant turn inside a partially returned tool-result group.",
+        "resources": ["scripts/messages.mjs", "tests/bridge.test.mjs", "references/verify.md"],
+        "verification": [
+          {"method": "offline", "result": "passed", "detail": "The prior accepted-output/next-input rejection was reproduced. The signed namespace/tool roundtrip now includes trailing assistant text; separate regressions reject interrupted parallel-result groups. All32 package tests pass."}
+        ]
+      }
+    },
+    {
+      "id": "truncated-tool-json-finalization",
+      "kind": "problem", "status": "resolved", "blocking": false,
+      "summary": "Tool JSON truncated by max_tokens was parsed before the stop reason, incorrectly turning incomplete output into a protocol error.",
+      "observed_on": "2026-11-26",
+      "applies_to": ["Function and custom-tool argument truncation", "SSE and non-streaming Responses output"],
+      "operations": ["install", "verify"],
+      "aliases": ["messages_upstream_tool_json_invalid", "max_tokens tool JSON", "response.incomplete"],
+      "source_refs": ["messages-edge-fixes-2026-11-26"],
+      "resolution": {
+        "reason": "Finalize completed-tool arguments only after the real terminal state is known, validating every completed tool before any dispatch event. Explicit max_tokens termination remains incomplete; a partial custom JSON wrapper is not exposed as freeform input.",
+        "resources": ["scripts/messages.mjs", "tests/bridge.test.mjs", "references/verify.md"],
+        "verification": [
+          {"method": "offline", "result": "passed", "detail": "Function/custom truncation passes in both SSE and JSON modes with no completed tool dispatch. A malformed completed tool still fails before an earlier valid tool can be dispatched. Missing-terminal failures remain covered."}
+        ]
+      }
+    },
+    {
+      "id": "messages-state-native-route",
+      "kind": "problem", "status": "resolved", "blocking": false,
+      "summary": "Adapter-owned encrypted Messages reasoning was forwarded to native Responses backends after an in-thread model switch.",
+      "observed_on": "2026-11-26",
+      "applies_to": ["Messages-to-native Responses transitions through this bridge"],
+      "operations": ["diagnose", "install", "verify"],
+      "aliases": ["rs_wcm_", "encrypted content could not be verified", "Encrypted content could not be decrypted or parsed", "Opus切回GPT", "messages-state-native-route"],
+      "source_refs": ["messages-state-boundary-offline-2026-11-26"],
+      "resolution": {
+        "reason": "Only native outbound requests omit reasoning carrying both adapter-owned ID and ciphertext markers. Original conversations, visible/tool history and native reasoning are not rewritten; Messages-to-Messages verification remains unchanged.",
+        "resources": ["scripts/bridge.mjs", "tests/bridge.test.mjs", "references/diagnose.md", "references/install.md"],
+        "verification": [
+          {"method": "offline", "result": "passed", "detail": "The new synthetic native-backend regression failed with400 before the fix and passed after it for both GitHub and Windows native routes. It asserts visible/tool/native state retention and original-input immutability; all25 package tests pass."}
+        ]
+      }
+    },
+    {
+      "id": "dual-source-live-acceptance-pending",
+      "kind": "problem", "status": "resolved", "blocking": false,
+      "summary": "Historical and current direct App API success plus synthetic bridge tests do not establish this machine's Codex access to both sources.",
+      "observed_on": "2026-11-25",
+      "applies_to": ["Windows Copilot App Code relay 0.2.0", "Codex dual-source native Responses bridge"],
+      "operations": ["install", "verify"],
+      "aliases": ["Windows Copilot Codex", "双来源模型", "Copilot App CLI未验证"],
+      "source_refs": ["provided-app-history", "target-preflight", "bridge-offline", "windows-direct-live-2026-11-26", "target-deployment-record-review-2026-11-26"],
+      "resolution": {
+        "reason": "The previously blocked target later completed bounded native dual-source acceptance and Opus-specific acceptance. This closes that target's historical gap, not the separate new-machine or all-model validation boundary.",
+        "resources": ["references/install.md", "references/verify.md"],
+        "verification": [
+          {"method": "manual", "result": "passed", "detail": "Reviewed preserved same-day results for selected GitHub/Windows SSE and isolated CLI, Opus stream/tool/patch/read checks, and user-operated target UI. This review issued no new requests and does not relabel manual UI as an empty-directory experiment."}
+        ]
+      }
+    },
+    {
+      "id": "app-relay-local-auth-boundary",
+      "kind": "problem", "status": "open", "blocking": false,
+      "summary": "The original App relay accepts arbitrary local callers; bridge authentication does not secure its direct port on a multi-user machine.",
+      "observed_on": "2026-11-25",
+      "applies_to": ["Original copilot-app-proxy 0.2.0 model endpoints", "Shared or untrusted local-user environments"],
+      "operations": ["diagnose", "install", "verify"],
+      "aliases": ["Copilot App 无鉴权", "本机多用户额度"],
+      "source_refs": ["provided-app-source"]
+    },
+    {
+      "id": "native-responses-scope",
+      "kind": "discovery", "status": "open", "blocking": false,
+      "summary": "Messages-only models require explicit protocol conversion with bounded tools, thinking and history support; Sydney, hosted tools and Windows compaction remain unsupported.",
+      "observed_on": "2026-11-25",
+      "applies_to": ["Opt-in Windows Messages compatibility", "Unsupported hosted tools or cross-provider history", "Windows /responses/compact", "Long Codex conversations"],
+      "operations": ["diagnose", "install", "verify"],
+      "aliases": ["windows_compaction_unverified", "Messages-only Claude", "Claude Opus missing", "messages_reasoning_state_invalid", "messages_hosted_tool_unsupported", "Sydney", "gpt-61-sol"],
+      "source_refs": ["provided-app-source", "provided-app-history", "bridge-offline", "messages-protocol-2026-11-26", "messages-offline-2026-11-26"]
+    },
+    {
+      "id": "stale-venv-is-not-installation",
+      "kind": "discovery", "status": "resolved", "blocking": false,
+      "summary": "The supplied project's .venv directory was a stale Python 3.6.8 layout without Scripts/python.exe, while the project requires Python 3.12+.",
+      "observed_on": "2026-11-25",
+      "applies_to": ["Provided Windows source checkout before runtime preparation"],
+      "operations": ["diagnose", "install"],
+      "aliases": ["copilot-app-proxy python.exe missing", "旧虚拟环境"],
+      "source_refs": ["target-preflight", "provided-app-source", "app-offline"],
+      "resolution": {
+        "reason": "Preserved the stale directory and original source checkout; prepared a new private tracked-source copy with a valid Python 3.13.5 environment and the pinned mitmproxy dependency.",
+        "resources": ["references/diagnose.md", "references/install.md"],
+        "verification": [
+          {"method": "offline", "result": "passed", "detail": "55 supplied pytest tests and ruff passed in the new environment. Read-only doctor located Python, mitmdump and Copilot App and confirmed both ports free. No CA trust, relay startup, inference or GUI turn was performed."}
+        ]
+      }
+    },
+    {
+      "id": "windows-cert-provider-not-loaded",
+      "kind": "problem", "status": "resolved", "blocking": false,
+      "summary": "A Windows PowerShell5.1 child without the Certificate provider misreported a successfully installed temporary CA as untrusted.",
+      "observed_on": "2026-11-26",
+      "applies_to": ["Pinned App relay0.2.0 invoking Windows PowerShell from the observed native Windows environment"],
+      "operations": ["diagnose", "install", "rollback"],
+      "aliases": ["Temporary CA was not trusted", "Copilot App Certificate provider"],
+      "source_refs": ["windows-cert-provider-2026-11-26", "provided-app-source"],
+      "resolution": {
+        "reason": "Import the child PowerShell's own security module before queries. Apply only to the hash-checked private runtime source, preserve original bytes, and independently remove the exact CA left by the failed start.",
+        "resources": ["scripts/patch-cert-provider.py", "tests/test_cert_patch.py", "references/install.md", "references/diagnose.md"],
+        "verification": [
+          {"method": "local", "result": "passed", "detail": "The same trusted thumbprint changed from False to True after explicit module import. Exact failed-run CA removal succeeded. Patched runtime passed all55 supplied tests and then started successfully, captured its own-session token and fetched actual model metadata."}
+        ]
+      }
+    },
+    {
+      "id": "host-bridge-setup-rejected",
+      "kind": "problem", "status": "resolved", "blocking": false,
+      "summary": "This target's execution host rejected bridge configuration/startup preparation before execution; live bridge/Codex acceptance cannot proceed through that path.",
+      "observed_on": "2026-11-26",
+      "applies_to": ["Observed execution host rejecting the two proposed private bridge-setup commands; exact policy rule unknown"],
+      "operations": ["install", "verify"],
+      "aliases": ["Copilot bridge blocked by policy", "Full Access blocked by policy", "Windows Copilot 分流器启动被拒"],
+      "source_refs": ["host-command-rejection-2026-11-26", "codex-windows-approval-guidance-2026-11-26", "target-deployment-record-review-2026-11-26"],
+      "resolution": {
+        "reason": "The operational blocker on the observed target was cleared after the normal interactive permission selection and explicitly authorized host-managed deployment. The exact rule behind the old denied commands is still not established; fresh managed denials must not be bypassed.",
+        "resources": ["references/install.md", "references/diagnose.md"],
+        "verification": [
+          {"method": "manual", "result": "passed", "detail": "Reviewed the exact target-thread on-request/restricted-workspace setting and subsequent bridge readiness/inference records. No claim that the original denied command was replayed or that changing approval policy overrides every enforcement layer."}
+        ]
+      }
+    },
+    {
+      "id": "new-machine-rebuild-pending",
+      "kind": "problem", "status": "open", "blocking": true,
+      "summary": "The observed target reused an existing GitHub installation; a pristine-machine rebuild, full model matrix and logout/reboot recovery remain unverified.",
+      "observed_on": "2026-11-26",
+      "applies_to": ["New Windows machines", "Different GitHub gateways or key formats", "Full Windows model and lifecycle acceptance"],
+      "operations": ["install", "verify"],
+      "aliases": ["Windows Copilot 新机器部署", "Windows Copilot 全新安装", "Windows Copilot 重启恢复"],
+      "source_refs": ["target-deployment-record-review-2026-11-26", "deployment-guidance-audit-2026-11-26", "repository-check-limitation"]
+    },
+    {
+      "id": "expired-token-without-owned-renewal",
+      "kind": "problem", "status": "resolved", "blocking": false,
+      "summary": "A running relay without keepalive retained an expired token and returned models401; standalone renewal also requires explicit process ownership.",
+      "observed_on": "2026-11-26",
+      "applies_to": ["Existing no-keepalive App relay", "Public standalone keepalive command"],
+      "operations": ["diagnose", "install", "verify", "rollback"],
+      "aliases": ["Captured Copilot token has expired", "Copilot token过期", "Copilot keepalive", "upstreamAuthenticated false"],
+      "source_refs": ["provided-app-source", "target-deployment-record-review-2026-11-26"],
+      "resolution": {
+        "reason": "After authorization, use one normally managed App-based renewal worker, verify a newer token and actual metadata, and independently track/stop standalone workers not registered in launcher pids.json.",
+        "resources": ["references/install.md", "references/diagnose.md", "references/rollback.md"],
+        "verification": [
+          {"method": "manual", "result": "passed", "detail": "Reviewed expired-token/models401 followed by newer-expiry/models200 in preserved target results, and checked the supplied keepalive/launcher implementation. This does not guarantee renewal while locked or after reboot."}
+        ]
+      }
+    },
+    {
+      "id": "temporary-budget-is-not-production-quota",
+      "kind": "problem", "status": "resolved", "blocking": false,
+      "summary": "An extra request from one UI turn exhausted the temporary validation ledger and caused local429s to appear as model failures.",
+      "observed_on": "2026-11-26",
+      "applies_to": ["Bounded live/UI acceptance", "Normal-use bridge activation"],
+      "operations": ["diagnose", "install", "verify"],
+      "aliases": ["approved_request_budget_exhausted", "exceeded retry limit, last status: 429 Too Many Requests", "Codex 测试额度耗尽"],
+      "source_refs": ["target-deployment-record-review-2026-11-26", "bounded-tests-2026-11-26"],
+      "resolution": {
+        "reason": "Use a separately budgeted test endpoint, account for auxiliary requests, and remove only the test-budget reference when authorized normal use begins. Preserve the ledger; do not reset usage or assume upstream quota failure.",
+        "resources": ["references/install.md", "references/diagnose.md", "references/verify.md"],
+        "verification": [
+          {"method": "manual", "result": "passed", "detail": "Reviewed the exhausted ledger, two successful requests for one UI turn, later local429s, approved budget extension and successful normal-use readiness with accounting preserved."}
+        ]
+      }
+    },
+    {
+      "id": "catalog-default-and-ui-selection",
+      "kind": "discovery", "status": "resolved", "blocking": false,
+      "summary": "The catalog recommendation did not identify the configured probe model, and a user UI model selection changed the persisted default.",
+      "observed_on": "2026-11-26",
+      "applies_to": ["Observed Codex0.162.0-alpha.17.2 catalog/UI behavior"],
+      "operations": ["diagnose", "install", "verify", "rollback"],
+      "aliases": ["model/list isDefault", "Codex 默认模型改变", "Codex 模型选择不一致"],
+      "source_refs": ["target-deployment-record-review-2026-11-26"],
+      "resolution": {
+        "reason": "Check actual configuration and target turn/UI model/effort independently of catalog recommendation. Reconcile later user changes before restoring defaults or rolling back.",
+        "resources": ["references/install.md", "references/verify.md", "references/rollback.md"],
+        "verification": [
+          {"method": "manual", "result": "passed", "detail": "Reviewed the failed catalog-default assumption and recorded one-line default changes; user-confirmed choices were preserved or restored without replacing unrelated configuration."}
+        ]
+      }
+    },
+    {
+      "id": "relative-shell-path-probe",
+      "kind": "discovery", "status": "open", "blocking": false,
+      "summary": "A relative-path shell read failed after successful patch creation, while an explicit workdir/absolute-path read passed; the underlying shell-directory cause was not established.",
+      "observed_on": "2026-11-26",
+      "applies_to": ["Observed Windows Codex synthetic tool verification"],
+      "operations": ["diagnose", "verify"],
+      "aliases": ["apply_patch成功但Get-Content找不到文件", "Codex workdir", "Codex 相对路径"],
+      "source_refs": ["target-deployment-record-review-2026-11-26"]
+    }
+  ]
+}

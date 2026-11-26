@@ -30,6 +30,20 @@ On 2026-11-25, Windows x64 repository tests and an existing
 See the [evidence record](../evidence/2026-11-25-windows-x64.json) and open
 [findings](../findings.json). A passing maintenance check is not deployment success.
 
+### Updated locked dependency gate
+
+The original blocked result above remains historical. On 2026-11-26 the user
+approved exact compatible overrides for `pkce-challenge=5.0.1`, `hono=4.13.19`
+and `@hono/node-server=2.1.9`; npm regenerated the lock with SHA-512 integrity.
+All other package entries and direct dependency versions stayed unchanged.
+An empty temporary install, the pinned patch and all four original gateway tests
+then passed. No running installation, global registry or TLS verification changed.
+
+Use the committed manifest and lock together; do not improvise further downgrades
+when a registry is unavailable. The package remains stale for live deployment
+because the previous Linux live evidence belongs to the old dependency bytes.
+See [current offline evidence](../evidence/2026-11-26-compatible-lock-offline.json).
+
 ## Identify the actual deployment
 
 Establish whether the extension runs natively, in WSL, over SSH or in a container.

@@ -8,5 +8,10 @@
     "@jeffreycao/copilot-api": "2.8.2",
     "@openai/codex": "0.166.0",
     "patch-package": "8.0.1"
+  },
+  "overrides": {
+    "pkce-challenge": "5.0.1",
+    "hono": "4.13.19",
+    "@hono/node-server": "2.1.9"
   }
 }

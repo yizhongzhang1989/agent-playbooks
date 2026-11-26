@@ -1,0 +1,37 @@
+{
+  "id": "messages-native-history-boundary-2026-11-26",
+  "date": "2026-11-26",
+  "scope": "repository_offline",
+  "environment": {
+    "platform": "Native Windows x64",
+    "node": "26.13.0",
+    "upstreams": "Synthetic loopback Responses and Messages fixtures only"
+  },
+  "material_hashes": {
+    "SKILL.md": "ac885da7b22bc7a2935ed237e13f51c60ece71d9e46c529fad375fd86929675f",
+    "contract.json": "26e29c9af8a7ef6353eaece6064b699c1244b869a8dd244d0bd646c1cf75a902",
+    "sources.json": "b618fa6b1d66ff646bb3c847778949a423572392e893b8b26035f577b8627944",
+    "findings.json": "753ed5399ece8f16bb44084156b65000d66ef637ffcf5ccf4fdf58f33243e572",
+    "references/install.md": "d782efe0184ddc450e279c1296b2018194751ea337a23e89f685cae626d6d13f",
+    "references/diagnose.md": "d738c23b0da82eecf722bc4e185693b1b450bb5cac79a9e72ca604ac81ee3041",
+    "references/verify.md": "1f34788b1509206bdb6c75b0d4169f9e7fac543c5f8f108804df7d244bb8af87",
+    "scripts/bridge.mjs": "cc9d64141c3e364068a7526a7f587089ace701b01528d475564b39c201fd9980",
+    "scripts/messages.mjs": "ceab4f7d9a0e985fd5e9600c54f6a6b055152cc8977e3c10a188b2e66820445c",
+    "tests/bridge.test.mjs": "eb9f773a6f20b4c3323d6b27869890889a640f08c965300a4c3eaf8d303696cf"
+  },
+  "checks": [
+    {
+      "id": "A_BRIDGE_OFFLINE",
+      "result": "passed",
+      "method": "offline",
+      "source_refs": ["messages-state-boundary-offline-2026-11-26", "messages-offline-2026-11-26"],
+      "detail": "All25 package tests passed. The new switch regression first reproduced400 before the change. Native routes now omit only dual-marked, purely opaque adapter reasoning while retaining visible messages, tool history, native ciphertext, nonopaque reasoning and the original input. Existing same-model Messages thinking/tool roundtrips continue to pass."
+    }
+  ],
+  "limitations": [
+    "Offline evidence only; no real user conversation, credentials, signed thinking payloads or upstream account responses are published.",
+    "This is not universal model-switch compatibility. Native-to-Messages, cross-Claude-model encrypted state and unknown provider ciphertext are not normalized.",
+    "Only the outbound native request is normalized. Stored conversations are not edited, and no decrypted thinking is sent to another provider.",
+    "Earlier evidence retains its original bytes as historical; this record does not promote prior live or GUI observations to fresh execution."
+  ]
+}

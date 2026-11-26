@@ -42,14 +42,33 @@
     {
       "id": "windows-pinned-install-pending",
       "kind": "problem",
-      "status": "open",
+      "status": "resolved",
       "summary": "The pinned gateway's Windows clean installation and four original tests remain unverified after a locked dependency download failed.",
       "observed_on": "2026-11-25",
       "applies_to": ["Windows target using a package mirror that returned 404 for pkce-challenge 5.0.2", "The same target could not negotiate TLS with the official registry"],
       "operations": ["install", "verify"],
       "blocking": false,
       "aliases": ["pkce-challenge@5.0.2", "Windows gateway clean install"],
-      "source_refs": ["windows-maintenance-validation"]
+      "source_refs": ["windows-maintenance-validation", "compatible-locked-dependencies-2026-11-26"],
+      "resolution": {
+        "reason": "Three explicitly approved, range-compatible overrides restored the clean locked-install/patch/test gate. This resolves dependency installation and the four synthetic tests only; live deployment under the new lock remains separately blocked.",
+        "resources": ["tools/package.json", "tools/package-lock.json", "references/windows.md"],
+        "verification": [
+          {"method": "offline", "result": "passed", "detail": "npm generated the lock and retained SHA512. Every other package entry remained identical. A clean temporary npm ci installed194 packages, applied the pinned patch and passed all4 original tests without real credentials or model requests."}
+        ]
+      }
+    },
+    {
+      "id": "updated-lock-live-validation-pending",
+      "kind": "problem",
+      "status": "open",
+      "summary": "The updated dependency lock has passing offline tests but has not repeated the historical live service, account and UI acceptance.",
+      "observed_on": "2026-11-26",
+      "applies_to": ["Current lock with three compatible overrides", "Fresh live reference-gateway deployment on any platform"],
+      "operations": ["install", "verify"],
+      "blocking": true,
+      "aliases": ["updated gateway lock", "gateway live revalidation"],
+      "source_refs": ["compatible-locked-dependencies-2026-11-26"]
     },
     {
       "id": "windows-live-ui-pending",

@@ -1,0 +1,38 @@
+{
+  "id": "compatible-lock-clean-install-2026-11-26",
+  "date": "2026-11-26",
+  "scope": "repository_offline",
+  "environment": {
+    "platform": "Native Windows x64",
+    "node": "26.13.0",
+    "gateway": "@jeffreycao/copilot-api2.8.2; direct dependency versions unchanged",
+    "overrides": "pkce-challenge5.0.1; hono4.13.19; @hono/node-server2.1.9",
+    "scope": "Empty temporary installation with ordinary npm cache and integrity verification; no running service, account or UI"
+  },
+  "material_hashes": {
+    "SKILL.md": "b8dac10a03a26b3f553b7f4913acbb5dd7dba89dc82a67921d12d3ce3069fa6d",
+    "contract.json": "1c3ebd5a7375409a8d6e4bdfd8c1f2d2ead2184161ed60ca0117250399ef6304",
+    "findings.json": "ceadcd432393d970d7f43c3dfe59f084a3722839bd4765c662352dbe731adc71",
+    "sources.json": "dcb72798e92a082dcf16bbe87b69bacb8acfc77a0d51db2f8d8c1bad5143ed86",
+    "references/windows.md": "9ecae5f76671437f15927b33851688dfda93617f39e95ce9549eb13d0d8b2f19",
+    "tools/package.json": "d87de0c1ba9d25cecf88216be5579791f7c26105a2b141371188dde79984b1da",
+    "tools/package-lock.json": "a81b04b35dd81e6a8fc889f288e504a26a60872c7232ab14c23dab7f26160eea",
+    "tools/patches/@jeffreycao+copilot-api+2.8.2.patch": "00419025686ffe7cc9f95c5d5564b295bd4d879b33d92ff13aab0f049ee6f2ae",
+    "tools/test/replication.test.mjs": "a75d2a242cc31034b8a762ea1f58d4826b8e3f456abe84ae2abe08249b42d83a"
+  },
+  "checks": [
+    {
+      "id": "A_PATCH",
+      "result": "passed",
+      "method": "offline",
+      "source_refs": ["compatible-locked-dependencies-2026-11-26"],
+      "detail": "npm ci installed194 packages into an empty temporary tools directory; patch-package applied the pinned gateway patch and all4 original tests passed. Independent lock comparison found only the three approved packages changed, all retained SHA512 and satisfied original parent ranges."
+    }
+  ],
+  "limitations": [
+    "Offline installation and synthetic tests only. The updated lock has not rerun historical live service/account/CLI/UI acceptance, so the package is stale for deployment.",
+    "Normal package-cache use does not establish availability from every registry or a cold cache on another machine.",
+    "No global registry change, TLS bypass, real credentials, model request or running gateway modification was used.",
+    "Original Linux and Windows evidence records remain byte-preserved as historical."
+  ]
+}

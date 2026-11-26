@@ -1,0 +1,159 @@
+{
+  "id": "windows-relay-partial-live-2026-11-26",
+  "date": "2026-11-26",
+  "scope": "target_installation",
+  "environment": {
+    "platform": "Native Windows x64, one interactive session observed",
+    "python": "3.13.5",
+    "node": "26.13.0",
+    "child_powershell": "5.1.26100.9711",
+    "mitmproxy": "12.3.1",
+    "aiohttp": "3.14.5",
+    "app_source": "copilot-app-proxy0.2.0 at cfb409bbce234f0ce8e80c89f21bf7afe79a6e87, private cert-provider patch applied",
+    "codex": "Current production configuration preserved; new CLI/UI not executed during this attempt"
+  },
+  "material_hashes": {
+    "SKILL.md": "bc75f41beb1d9093343f6f9fc564ee6468e35e249b11c9863ef053fe445e2aa6",
+    "sources.json": "602ffa25c04ed5259110dbd360722aab3de7b9d80f522edd9c3bc641708d7cd8",
+    "findings.json": "a034f937f804029e8dcaf6d3e698f486cd9a2cfd7d8a0ad4abfa15b11f507eba",
+    "references/install.md": "4d9ed1cebe8dcffc2b1d8076ac28aa16487fcf58d487ff10de4797cf07477cb5",
+    "references/diagnose.md": "dfbe132f70642243ec946c37a74f722879a1085ad7801dad712cad92ad8657b6",
+    "references/verify.md": "a5c449706a2fa7d171b65d1df4d50a6607c8014e0241c7db04ea8cdd8c2fc583",
+    "references/rollback.md": "5a331a8d454e693cc748e4a1935bb140c8731c8601b3aef78c12a1d6ca7a07bc",
+    "scripts/bridge.mjs": "25c2c227b01a6f40139157577ca9ac999518a9d96d69cac77956bb11ae0463c4",
+    "scripts/catalog.mjs": "3e7f10677523845bd6faf88e1a3f5442783b0c40a1dadf245b8cb2f427270322",
+    "scripts/budget.mjs": "dc7e40c8bcac416dce3f4929fabdf379e6ebd4314415c05e6d40b74647447bd4",
+    "scripts/patch-cert-provider.py": "c55271ec1cac28ef54bdd93d4a23bc68f1e19db444539bea589d086cb88af610",
+    "tests/bridge.test.mjs": "a4ab1178c6876b89045db4658e86c4b652137992ed647206a3fbf2c33c19dde7",
+    "tests/test_cert_patch.py": "5e9d2930b8197a222e46d5d92f17c158ae30ca641fb0acab4c7de380bb3753cf"
+  },
+  "checks": [
+    {
+      "id": "A_DIAGNOSIS",
+      "result": "passed",
+      "method": "manual",
+      "source_refs": [
+        "windows-cert-provider-2026-11-26",
+        "host-command-rejection-2026-11-26"
+      ],
+      "detail": "Localized the CA false-negative to a missing Certificate provider in the WindowsPowerShell child, corrected the pinned private runtime and removed the exact failed-run CA. Two later host command rejections occurred before bridge setup; their narrower policy cause is unknown and no bypass was attempted."
+    },
+    {
+      "id": "A_OFFLINE",
+      "result": "passed",
+      "method": "offline",
+      "source_refs": [
+        "bounded-tests-2026-11-26",
+        "windows-cert-provider-2026-11-26"
+      ],
+      "detail": "12 package Node regressions, all29 repository maintenance tests, five Python patch tests, the idempotent actual-runtime patch check and all55 supplied runtime pytest tests passed. Repository validate passed. This does not claim full npm run check success: legacy gateway dependency installation failed with mirror404 before its four tests."
+    },
+    {
+      "id": "A_BRIDGE_OFFLINE",
+      "result": "passed",
+      "method": "offline",
+      "source_refs": [
+        "bounded-tests-2026-11-26"
+      ],
+      "detail": "Includes persistent synthetic request-budget reservation across restarts, exhaustion429 and malformed-ledger503 with no upstream forwarding, in addition to the prior route/transport/security checks. Not a live bridge deployment."
+    },
+    {
+      "id": "A_RELAY",
+      "result": "passed",
+      "method": "local",
+      "source_refs": [
+        "windows-direct-live-2026-11-26",
+        "windows-cert-provider-2026-11-26"
+      ],
+      "detail": "Authorized App restart/process proxy and current-user CA completed after the bounded source fix. App relay and HTTPS observer listen only on127.0.0.1; own-session DPAPI token capture and real models metadata200 succeeded. Private ACLs passed, only the expected new CA remained, system proxy and existing GitHub/Codex baselines were unchanged. No keepalive was enabled."
+    },
+    {
+      "id": "A_UPSTREAM_SSE",
+      "result": "passed",
+      "method": "live",
+      "source_refs": [
+        "windows-direct-live-2026-11-26"
+      ],
+      "detail": "One direct /v1/responses request for gpt-5.6-sol, none effort, store:false and fixed non-sensitive input returnedHTTP200, text/event-stream, one real response.completed with status completed, no error/failed/incomplete event, and exact COPILOT_DUAL_OK. This used1 of8 approved requests; it did not go through the new bridge or Codex."
+    },
+    {
+      "id": "A_AUTH",
+      "result": "not_tested",
+      "method": "local",
+      "source_refs": [
+        "windows-direct-live-2026-11-26",
+        "host-command-rejection-2026-11-26"
+      ],
+      "detail": "New bridge key/configuration and authenticated endpoint were not created; the original App relay remains unauthenticated to local callers."
+    },
+    {
+      "id": "A_CATALOG",
+      "result": "not_tested",
+      "method": "local",
+      "source_refs": [
+        "windows-direct-live-2026-11-26",
+        "host-command-rejection-2026-11-26"
+      ],
+      "detail": "Actual nine App entries produced a17-entry merged file:13 unchanged GitHub plus4 Windows Responses. Five Messages-only models were explicitly excluded. The new catalog was not loaded into actual Codex in this run."
+    },
+    {
+      "id": "A_GITHUB",
+      "result": "not_tested",
+      "method": "live",
+      "source_refs": [
+        "windows-direct-live-2026-11-26",
+        "host-command-rejection-2026-11-26"
+      ],
+      "detail": "Existing GitHub service and original configuration are preserved; no real request through the new bridge was possible."
+    },
+    {
+      "id": "A_WINDOWS",
+      "result": "not_tested",
+      "method": "live",
+      "source_refs": [
+        "windows-direct-live-2026-11-26",
+        "host-command-rejection-2026-11-26"
+      ],
+      "detail": "Direct App SSE passed separately; host-rejected bridge setup means no live through-bridge acceptance."
+    },
+    {
+      "id": "A_TOOLS",
+      "result": "not_tested",
+      "method": "live",
+      "source_refs": [
+        "windows-direct-live-2026-11-26",
+        "host-command-rejection-2026-11-26"
+      ],
+      "detail": "No real tool-call/output roundtrip in this attempt."
+    },
+    {
+      "id": "A_CLI",
+      "result": "not_tested",
+      "method": "live",
+      "source_refs": [
+        "windows-direct-live-2026-11-26",
+        "host-command-rejection-2026-11-26"
+      ],
+      "detail": "No new Codex inference process/turn was started."
+    },
+    {
+      "id": "A_UI",
+      "result": "not_tested",
+      "method": "user",
+      "source_refs": [
+        "windows-direct-live-2026-11-26",
+        "host-command-rejection-2026-11-26"
+      ],
+      "detail": "No target Codex UI was reloaded, switched or verified."
+    }
+  ],
+  "limitations": [
+    "Partial installation and one direct upstream SSE success, not successful Codex dual-source integration. The bridge and new Codex configuration were not created because two host commands were rejected before execution.",
+    "Only the specific direct gpt-5.6-sol request was live-verified. Other model IDs/efforts come from metadata only; Messages-only and Sydney models are not converted.",
+    "Request-budget enforcement passed synthetic tests but was not deployed. The direct probe was separately reserved as1 of8; future shared ledgers must include it rather than reset to0.",
+    "Automatic renewal was disabled. Current temporary CA and private runtime remain on the target for the ongoing installation; no logout/reboot/persistence or token-renewal claim.",
+    "The App relay has no local client key. Loopback/private ACLs do not make it suitable for an untrusted multi-user host.",
+    "The legacy npm gateway integration gate remains unexecuted after the mirror404 for locked pkce-challenge5.0.2; no dependency/TLS workaround was applied.",
+    "All raw target identifiers, certificate fingerprints/private keys, tokens, logs and authorization records remain outside the repository. No commit or publication performed."
+  ]
+}

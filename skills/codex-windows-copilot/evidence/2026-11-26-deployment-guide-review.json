@@ -1,0 +1,40 @@
+{
+  "id": "windows-deployment-guidance-review-2026-11-26",
+  "date": "2026-11-26",
+  "scope": "repository_offline",
+  "environment": {
+    "platform": "Native Windows x64",
+    "node": "26.13.0",
+    "activity": "Documentation/source consistency review and syntax parsing; no account requests or service changes",
+    "record_scope": "Previously completed same-day single-target native, Opus and history-boundary validation; sanitized summaries explicitly approved by the user"
+  },
+  "material_hashes": {
+    "SKILL.md": "172053a8ee1587f62a8745d7f5c75de6c8ceddc23b0dd28ac7e2c255cc1ad4f4",
+    "contract.json": "b91c4fd00aeaac9a5d1043502410cacac836183cdf3651ee2dc15bdda92cc0a2",
+    "sources.json": "d0bbe357dcae55e16ead77383dddaaffb332a038827671d76dff88ed184ed53b",
+    "findings.json": "06e45768e76ca2433d0ec8da4a206ef52b08a0425ca2a88f873b8f8eb59a008d",
+    "references/install.md": "649c454ed9d5ac173352924f55899b2940de2d2218f472c74b455d366d573205",
+    "references/diagnose.md": "42279b9d6997164ebab80355d3fdc35d3504adab228a2812ddcf3b3eeddfd448",
+    "references/verify.md": "04247e9d806c694fcf09a844554f05e4518c7a24136111887b866369a412b50e",
+    "references/rollback.md": "957d84ae6598b153cae82aeec8d6dced8eeee4cf9f87d2563b4c2cb69e6d41dc",
+    "scripts/bridge.mjs": "cc9d64141c3e364068a7526a7f587089ace701b01528d475564b39c201fd9980",
+    "scripts/messages.mjs": "ceab4f7d9a0e985fd5e9600c54f6a6b055152cc8977e3c10a188b2e66820445c"
+  },
+  "checks": [
+    {
+      "id": "A_GUIDANCE",
+      "result": "passed",
+      "method": "manual",
+      "source_refs": ["deployment-guidance-audit-2026-11-26", "target-deployment-record-review-2026-11-26", "codex-windows-approval-guidance-2026-11-26"],
+      "detail": "Compared entrypoint, contract, findings and all four operation references with preserved approved target results and current source. Corrected stale target blockers and added explicit new-machine ordering, normal approvals, renewal ownership, key-reader/provider examples, test-quota transition, model/default and shell-path guidance. Seven PowerShell, one JavaScript, two JSON and two TOML examples parsed without executing deployment operations."
+    }
+  ],
+  "limitations": [
+    "Record review is not new inference, GUI execution or a pristine-machine installation. Earlier live/CLI/UI results retain their original limited scope.",
+    "The old denied command and enforcing classifier were not independently replayed; normal interactive approval is a supported path, not a promise to override managed policy.",
+    "The existing GitHub service was reused on the validated target. Other gateway/key formats, a clean rebuild, every model/effort and logout/reboot recovery remain unverified; the skill remains draft with an explicit blocking finding.",
+    "Manual UI checks used the user's chosen workspace. The old encrypted-error thread was not independently observed retrying; synthetic history probes and later user-created UI turns are distinguished.",
+    "The relative-path read failure's underlying shell-directory cause is still unknown; the explicit-workdir/absolute-path verification passed and is documented without changing shell configuration.",
+    "No private paths, account details, credentials, raw logs or conversation contents were copied into the repository. Historical evidence bytes were preserved."
+  ]
+}

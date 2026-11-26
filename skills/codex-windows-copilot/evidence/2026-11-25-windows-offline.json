@@ -1,0 +1,158 @@
+{
+  "id": "windows-copilot-offline-preparation-2026-11-25",
+  "date": "2026-11-25",
+  "scope": "repository_offline",
+  "environment": {
+    "platform": "Native Windows x64",
+    "node": "26.13.0",
+    "python": "3.13.5",
+    "mitmproxy": "12.3.1",
+    "aiohttp": "3.14.5",
+    "pytest": "9.2.0",
+    "pytest_asyncio": "1.5.0",
+    "ruff": "0.17.5",
+    "copilot_app": "159.0.4402.13",
+    "codex": "0.162.0-alpha.17.2",
+    "app_source": "copilot-app-proxy 0.2.0, cfb409bbce234f0ce8e80c89f21bf7afe79a6e87"
+  },
+  "material_hashes": {
+    "SKILL.md": "8fddce8d854db8aa5f3e63d17ef25d8178258750126c842c42ed244907581a59",
+    "references/diagnose.md": "22d92dcae89ed77f2095b0eb26dc3622fa6b1e6af1382f9430f51346c5dc2fc8",
+    "references/install.md": "c23246e8f4e37935043ff08aebfe8d168ec6c81fac576f067b026f6f7f573d45",
+    "references/verify.md": "ee021ed94c4503b325605adb73885d536633dbbe2d61853db9980431148d726f",
+    "references/rollback.md": "5a331a8d454e693cc748e4a1935bb140c8731c8601b3aef78c12a1d6ca7a07bc",
+    "scripts/catalog.mjs": "3e7f10677523845bd6faf88e1a3f5442783b0c40a1dadf245b8cb2f427270322",
+    "scripts/bridge.mjs": "5f0697b7d60caee4095f6ad04031bdaf870c15a1c4fcb75f9b1dc0e9c3ce25e5",
+    "tests/bridge.test.mjs": "dafa260c57849a68b7f99496a7d5076a42af8d8f349415cd5626a6cde84d9220",
+    "sources.json": "93f2de5668cf443649e773c32f26f4b541f2dbbd2de88c66c3b97dc6c0debdc4",
+    "findings.json": "3e21a60a8104c3a545919da81e07d823275486f2e1dc3eb5e9d40b174122fa74"
+  },
+  "checks": [
+    {
+      "id": "A_BRIDGE_OFFLINE",
+      "result": "passed",
+      "method": "offline",
+      "source_refs": [
+        "bridge-offline"
+      ],
+      "detail": "All 11 package regressions passed: source-disjoint overlapping IDs, exact GitHub catalog preservation, credentials/Host/Origin checks, route validation, errors and Retry-After, redirect rejection, truncation/cancellation/deadline behavior, incremental SSE, GitHub compact routing and no-overwrite catalog/config loading."
+    },
+    {
+      "id": "A_OFFLINE",
+      "result": "passed",
+      "method": "offline",
+      "source_refs": [
+        "bridge-offline",
+        "app-offline",
+        "repository-check-limitation"
+      ],
+      "detail": "Repository validate and all 28 maintenance tests passed; the fixed external App source passed all55 pytest tests, ruff and read-only doctor in a new private environment. This is the new package/offline scope only: the full npm run check was NOT successful because the legacy GitHub gateway locked dependency download returned404 before its four tests."
+    },
+    {
+      "id": "A_CATALOG_PARSE",
+      "result": "passed",
+      "method": "local",
+      "source_refs": [
+        "codex-synthetic-catalog"
+      ],
+      "detail": "Actual bundled Codex 0.162.0-alpha.17.2 initialize/model/list loaded 13 unchanged GitHub entries plus one explicitly synthetic windows-copilot/ entry in isolated CODEX_HOME, strict config and an empty directory. Zero inference and no production configuration change. Does not prove a real Windows catalog or profile/UI selection."
+    },
+    {
+      "id": "A_DIAGNOSIS",
+      "result": "passed",
+      "method": "manual",
+      "source_refs": [
+        "target-preflight",
+        "app-offline"
+      ],
+      "detail": "Existing GitHub loopback ownership and no-key401/keyed-models200 verified. Production config/catalog/launcher hashes unchanged. Original source and stale .venv preserved; new private copy passes prerequisite tests. App relay not started pending explicit CA/restart/account/quota permission."
+    },
+    {
+      "id": "A_RELAY",
+      "result": "not_tested",
+      "method": "local",
+      "source_refs": [
+        "target-preflight",
+        "codex-synthetic-catalog"
+      ],
+      "detail": "No CA trust change, App restart, real token capture or current App model request was performed."
+    },
+    {
+      "id": "A_AUTH",
+      "result": "not_tested",
+      "method": "local",
+      "source_refs": [
+        "target-preflight",
+        "codex-synthetic-catalog"
+      ],
+      "detail": "Bridge isolation is synthetic only; production dual-source keys and App local-user risk acceptance are pending."
+    },
+    {
+      "id": "A_CATALOG",
+      "result": "not_tested",
+      "method": "local",
+      "source_refs": [
+        "target-preflight",
+        "codex-synthetic-catalog"
+      ],
+      "detail": "No fresh account-derived Windows model list exists; synthetic parser acceptance is not this requirement."
+    },
+    {
+      "id": "A_GITHUB",
+      "result": "not_tested",
+      "method": "live",
+      "source_refs": [
+        "target-preflight",
+        "codex-synthetic-catalog"
+      ],
+      "detail": "Existing GitHub metadata works; no real inference through the new bridge was sent."
+    },
+    {
+      "id": "A_WINDOWS",
+      "result": "not_tested",
+      "method": "live",
+      "source_refs": [
+        "target-preflight",
+        "codex-synthetic-catalog"
+      ],
+      "detail": "No real Windows model inference was sent."
+    },
+    {
+      "id": "A_TOOLS",
+      "result": "not_tested",
+      "method": "live",
+      "source_refs": [
+        "target-preflight",
+        "codex-synthetic-catalog"
+      ],
+      "detail": "No real Windows tool-call roundtrip was sent."
+    },
+    {
+      "id": "A_CLI",
+      "result": "not_tested",
+      "method": "live",
+      "source_refs": [
+        "target-preflight",
+        "codex-synthetic-catalog"
+      ],
+      "detail": "No Codex inference turn; only isolated metadata RPCs."
+    },
+    {
+      "id": "A_UI",
+      "result": "not_tested",
+      "method": "user",
+      "source_refs": [
+        "target-preflight",
+        "codex-synthetic-catalog"
+      ],
+      "detail": "No actual target UI conversation was performed or user-confirmed."
+    }
+  ],
+  "limitations": [
+    "Draft preparation, not a successful live dual-source installation. No account authorization, CA trust change, App restart, inference, real terminal event or GUI evidence.",
+    "Only native Windows Responses metadata is supported; Messages-only/Sydney models are not converted, Windows compaction and long sessions remain unsupported/unverified.",
+    "The original App relay has no local client key; bridge authentication does not secure its direct port.",
+    "Full npm run check stopped on the existing mirror404 for pkce-challenge5.0.2; the legacy gateway four-test suite did not run. No dependency version, registry or TLS change was made.",
+    "External Python dependencies are not fully locked by the provided project. Actual resolved dependency snapshot, baseline backups and raw diagnostics remain private; no runtime files are bundled."
+  ]
+}

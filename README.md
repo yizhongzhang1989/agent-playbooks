@@ -154,7 +154,8 @@ npm test
 
 | 技能 | 生命周期 | 适用范围 |
 |---|---|---|
-| [codex-copilot-gateway](skills/codex-copilot-gateway/SKILL.md) | active | 配置、诊断和验证 Codex CLI 或 VS Code Codex 通过本地 GitHub Copilot 网关使用 Responses API。包含原生 Windows 已有代理诊断与模型目录刷新；适用于 Codex 反向代理、copilot-gateway、401、流在 response.completed 前结束、插件找不到模型或只显示 Chat 的问题；不是系统 HTTP/HTTPS 正向代理教程。 |
+| [codex-copilot-gateway](skills/codex-copilot-gateway/SKILL.md) | stale | 配置、诊断和验证 Codex CLI 或 VS Code Codex 通过本地 GitHub Copilot 网关使用 Responses API。包含原生 Windows 已有代理诊断与模型目录刷新；适用于 Codex 反向代理、copilot-gateway、401、流在 response.completed 前结束、插件找不到模型或只显示 Chat 的问题；不是系统 HTTP/HTTPS 正向代理教程。 |
+| [codex-windows-copilot](skills/codex-windows-copilot/SKILL.md) | draft | 将 Windows Microsoft Copilot App Code 模型接入 Codex，保留现有 GitHub Copilot 模型；GPT 原生 Responses 直通，Claude Opus 通过显式 Messages 兼容层接入。包含新机器部署顺序、审批、证书、令牌续期、测试限额和模型切换诊断。已验证单台目标的指定模型通路；全新机器完整部署和全模型验收仍待验证，保持 draft。不适用于消费版 Chat、Sydney 或绕过授权。 |
 
 ## 边界
 

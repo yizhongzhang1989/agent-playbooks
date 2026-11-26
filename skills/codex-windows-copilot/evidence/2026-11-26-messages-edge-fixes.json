@@ -1,0 +1,34 @@
+{
+  "id": "messages-edge-corrections-2026-11-26",
+  "date": "2026-11-26",
+  "scope": "repository_offline",
+  "environment": {
+    "platform": "Native Windows x64",
+    "node": "26.13.0",
+    "activity": "Synthetic protocol regressions only; no model requests or deployed runtime changes"
+  },
+  "material_hashes": {
+    "SKILL.md": "172053a8ee1587f62a8745d7f5c75de6c8ceddc23b0dd28ac7e2c255cc1ad4f4",
+    "contract.json": "a298657b19862661e8028f651d3e64e3cd3f8a98a21e1cd257f63223c05891d4",
+    "findings.json": "45b4f8ee4b3abf5e263c10edf049de97ad7b865f6973d8378de3fed445c45585",
+    "sources.json": "d4778fcebf926919b9fafaf3ea37a9333ea3129719b02ebefdaa22a588d55d07",
+    "references/verify.md": "983c77bd1066fab7da65388f4001c344a9b2916fbb99b18ddf54221a72129368",
+    "scripts/messages.mjs": "d276a0c23cde0a7014eccaefc56284958c5a2255369aa2720ddfcd93b1a215f4",
+    "scripts/bridge.mjs": "cc9d64141c3e364068a7526a7f587089ace701b01528d475564b39c201fd9980",
+    "tests/bridge.test.mjs": "ef058d83223474f1b1ce9b69039542c05490376f73730f3050696ac6fd5e9174"
+  },
+  "checks": [
+    {
+      "id": "A_BRIDGE_OFFLINE",
+      "result": "passed",
+      "method": "offline",
+      "source_refs": ["messages-edge-fixes-2026-11-26"],
+      "detail": "All32 package tests passed. The mixed signed namespace/tool response includes trailing assistant text and roundtrips successfully; invalid interrupted result groups remain rejected. Partial function/custom JSON returns incomplete in SSE and JSON modes without tool dispatch. Malformed completed JSON fails before any valid tool can be dispatched."
+    }
+  ],
+  "limitations": [
+    "These are offline source corrections, not new account, CLI or GUI acceptance and not an update of an already deployed private copy.",
+    "Existing bounded Messages feature and model-switch limitations remain unchanged.",
+    "Historical evidence retains its original bytes; earlier live observations are not reclassified as fresh validation."
+  ]
+}

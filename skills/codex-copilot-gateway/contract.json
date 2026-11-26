@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "id": "codex-copilot-gateway",
-  "lifecycle": "active",
+  "lifecycle": "stale",
   "tags": [
     "ai-tools",
     "codex",
@@ -342,7 +342,7 @@
       "user_authorization",
       "user_gui_confirmation"
     ],
-    "platform": "Ubuntu 22.04.5 LTS / Linux x86_64: prior full source installation. Windows x64: maintenance tests and existing-proxy catalog recovery only; pinned gateway install, inference, UI and logout/reboot unverified.",
+    "platform": "Ubuntu22.04.5/Linux x86_64: historical live installation under the previous lock. Windows x64: current locked dependency install, patch application and four synthetic gateway tests passed after three approved compatible pins. Fresh live/UI validation of the updated lock remains pending.",
     "commands": [
       "bash",
       "curl",
@@ -444,9 +444,11 @@
   ],
   "evidence": {
     "current": [
+      "evidence/2026-11-26-compatible-lock-offline.json"
+    ],
+    "historical": [
       "evidence/2026-11-25-ubuntu-22.04-x86_64.json",
       "evidence/2026-11-25-windows-x64.json"
-    ],
-    "historical": []
+    ]
   }
 }

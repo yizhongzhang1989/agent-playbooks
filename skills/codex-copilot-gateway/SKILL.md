@@ -4,7 +4,7 @@ description: 配置、诊断和验证 Codex CLI 或 VS Code Codex 通过本地 G
 license: MIT
 metadata:
   language: zh-CN,en
-  compatibility: Ubuntu 22.04.5 LTS 有历史完整安装证据；Windows x64 已验证维护工具与已有代理的模型元数据恢复，未验证固定网关新装、真实推理、GUI 或重启。需要本机文件与 shell 能力；授权及 GUI 验收需要用户参与。
+  compatibility: Ubuntu 22.04.5 LTS 有旧锁文件的历史完整安装证据；Windows x64 的当前锁定依赖安装、补丁及4项合成测试已通过。依赖更新后的真实部署/GUI仍待验证，当前为stale。需要本机文件与shell能力；授权及GUI验收需要用户参与。
 ---
 
 # Codex through a local Copilot gateway
@@ -12,6 +12,10 @@ metadata:
 ## Read first
 
 Read [contract.json](contract.json) and open items in [findings.json](findings.json).
+This package is currently **stale** for live deployment: three explicitly approved
+compatible dependency pins restored the clean offline gate, but the updated lock
+has not repeated the prior live installation. Do not reuse the old live evidence
+as proof for the new bytes.
 Choose an operation from the actual goal,
 not from the presence of an installation command. Metadata grants no permission.
 This package is not automatically registered with any AI client.
@@ -54,8 +58,10 @@ VS Code UI success. It is not a new-machine execution of this migrated package.
 Four original gateway checks and repository maintenance tests are bundled; they
 do not constitute full transport coverage. The
 [Windows record](evidence/2026-11-25-windows-x64.json) distinguishes passing
-maintenance/metadata checks from the blocked locked installation and untested
-inference/UI. It is not a second full installation success. Other platforms,
+maintenance/metadata checks from the originally blocked installation. The
+[updated lock record](evidence/2026-11-26-compatible-lock-offline.json) now covers
+clean dependency installation, patch application and all four original tests,
+without account, inference or GUI operations. It is not a second full installation success. Other platforms,
 isolated CLI, SSH forwarding, long-session compression, logout and full-machine
 reboot are not validated here.
 See [optional paths](references/optional.md) only when explicitly needed.

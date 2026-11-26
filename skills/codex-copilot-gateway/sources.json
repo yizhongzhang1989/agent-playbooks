@@ -2,6 +2,13 @@
   "schema_version": 1,
   "sources": [
     {
+      "id": "compatible-locked-dependencies-2026-11-26",
+      "kind": "local_observation",
+      "observed_on": "2026-11-26",
+      "claims": ["The configured source did not provide the previously locked pkce-challenge5.0.2 and hono4.13.22; the Windows cache audit also identified the node-server entry as unavailable locally", "The user explicitly approved pkce-challenge5.0.1, hono4.13.19 and @hono/node-server2.1.9, all within original parent ranges", "npm generated the override lock with SHA512; all other package objects and direct dependency versions remained identical", "A clean temporary install applied the existing pinned patch and passed all4 original gateway tests"],
+      "note": "No global registry/TLS setting, running gateway or account was changed. The initial mirror-generated pkce entry used SHA1; it was regenerated from official cached metadata to retain SHA512 before acceptance. Current evidence is offline only; previous live evidence is preserved as historical and the package is stale pending fresh live validation."
+    },
+    {
       "id": "source-guide",
       "kind": "provided_document",
       "title": "CODEX_REVERSE_PROXY_SETUP.md, audited installation guide",

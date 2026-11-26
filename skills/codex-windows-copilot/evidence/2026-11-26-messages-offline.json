@@ -1,0 +1,42 @@
+{
+  "id": "windows-messages-offline-2026-11-26",
+  "date": "2026-11-26",
+  "scope": "repository_offline",
+  "environment": {
+    "platform": "Native Windows x64",
+    "node": "26.13.0",
+    "client_shape": "Codex 0.162.0-alpha.17.2 against a synthetic loopback server; no upstream inference"
+  },
+  "material_hashes": {
+    "SKILL.md": "1ead4fa45364a88327ce43990aae8683f20dc9ee6ff877a289aa657c45e1aba6",
+    "contract.json": "4009ee29d2a9eac3a9ff19e2678f3870d5e3b2629935368b28f985c7ea2ce9e0",
+    "sources.json": "ecb5bbdd6e8e54edbf6f3e2962067603ad0e3d2b637c824970b4e671ac06d032",
+    "findings.json": "8c8d56ed1b89e26ba0baa7684234929f5abee25d6d850b84f18d968981741817",
+    "references/install.md": "398dffaaa9ef644c3c1a3d9d99b65ec42b91f9c1410267cfd11af900bf60c970",
+    "references/diagnose.md": "8fa6e807af8f4dfdcb5cfdc3aa3c7c756cec7144fcfd336ce5e4f9405ea4612e",
+    "references/verify.md": "aa5ee0b4a90c0cf6899a32edb0d613de05a6b5a20ff3cd81bdff317d2ff3f351",
+    "references/rollback.md": "5f5add2a524aa77fa5ca1433cfb7e7d31289e5ea491abe44fea4b5eb5a939241",
+    "scripts/bridge.mjs": "d52ddfba873326faeafa6b5dcb095445e8a02ab4b9ef7157979a75a55ae78ed2",
+    "scripts/catalog.mjs": "31b7f98050192318aa9b9cafe5e551c3585218c91ff18092c32139bf1e034407",
+    "scripts/messages.mjs": "ceab4f7d9a0e985fd5e9600c54f6a6b055152cc8977e3c10a188b2e66820445c",
+    "scripts/budget.mjs": "dc7e40c8bcac416dce3f4929fabdf379e6ebd4314415c05e6d40b74647447bd4",
+    "tests/bridge.test.mjs": "5bbd88b87e99b8667d0a68ce44ca7af2d54e066c36b34c94dc8db63438990433"
+  },
+  "checks": [
+    {
+      "id": "A_BRIDGE_OFFLINE",
+      "result": "passed",
+      "method": "offline",
+      "source_refs": ["messages-offline-2026-11-26", "messages-protocol-2026-11-26"],
+      "detail": "All24 package tests passed, including five nested failure cases. Coverage includes existing native routing/auth/error behavior, opt-in Messages metadata, roles and tool results, namespace and freeform tools, purpose-separated authenticated thinking state, incremental SSE, stable event/item IDs, upstream usage, unsupported-input rejection, upstream429 preservation and incomplete tools not dispatched as completed calls."
+    }
+  ],
+  "limitations": [
+    "This evidence contains offline synthetic checks only. It is not proof of account entitlement, all-model live behavior or target GUI acceptance.",
+    "The Messages adapter implements a bounded subset, not full Responses equivalence: hosted tools, structured output, forced tool choice, server-side conversation state and remote compaction are unsupported.",
+    "Claude thinking is preserved as encrypted opaque state, not shown as an answer or used to claim visible reasoning-summary support. Key rotation or a different model requires a new conversation.",
+    "Images are limited to inline base64 conversion; current catalog entries do not infer vision entitlement from historical tests.",
+    "The existing external relay/runtime and legacy gateway dependency installation were not changed by this adapter work. No full legacy dependency-gate success is claimed.",
+    "Prior evidence files retain their original bytes under historical classification; no historical success was rewritten to cover the new converter."
+  ]
+}
